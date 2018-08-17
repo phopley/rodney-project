@@ -1,7 +1,7 @@
 # Rodney House Bot
 - [Introduction](https://github.com/phopley/rodney-project/blob/master/docs/001%20Introduction.md "Rodney Introduction")
 - [ROS and the Raspberry Pi](https://github.com/phopley/rodney-project/blob/master/docs/002%20ROS%20and%20the%20Pi.md "Pi and ROS")
-- [Mission 1 "Take a message to..."]https://github.com/phopley/rodney-project/blob/master/docs/003%20Missions.md "Mission 1")
+- [Mission 1 "Take a message to..."](https://github.com/phopley/rodney-project/blob/master/docs/003%20Missions.md "Mission 1")
   - Design Goal 1
     - [Part 1 Pan & Tilt](https://github.com/phopley/rodney/blob/master/docs/04%20Mission%201%20Design%20Goal%201%20Part%201.md "Design goal 1 Part 1")
     - [Part 2 Face Recognition](https://github.com/phopley/rodney/blob/master/docs/05%20Mission%201%20Design%20Goal%201%20Part%202.md "Design goal 1 Part 2")
