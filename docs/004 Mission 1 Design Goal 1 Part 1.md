@@ -376,9 +376,9 @@ To program the Arduino connect the device to a workstation USB port. In the IDE 
 Next upload the sketch to the Arduino and check there are no errors reported.
 ### Arduino circuit
 When we construct Rodney we will need to give some thought about power. For now I'm going to power the Arduino using the USB port of the Raspberry Pi, the servos will be powered from 4xAA rechargeable batteries. Below is a circuit which shows the servo connections and the power to the servos.
-<img src="https://github.com/phopley/rodney/blob/master/docs/images/Optimized-Nano%20prototpe_schem.png" title="Test Circuit">
+<img src="https://github.com/phopley/rodney-project/blob/master/docs/images/Optimized-Nano%20prototpe_schem.png" title="Test Circuit">
 For now to test the software I'm going to build the circuit on a bread board and only connecting the servos for the head pan and tilt device.
-<img src="https://github.com/phopley/rodney/blob/master/docs/images/Optimized-IMG_0387.JPG" title="Test Circuit bread board">
+<img src="https://github.com/phopley/rodney-project/blob/master/docs/images/Optimized-IMG_0387.JPG" title="Test Circuit bread board">
 ### Running the code
 Now we are ready to run our code.
 
@@ -414,7 +414,7 @@ Now in the same terminal start the graph tool
 ```
 $ rqt_graph
 ```
-<img src="https://github.com/phopley/rodney/blob/master/docs/images/rosgraph_pantiltv2.png" title="Pan Tilt Graph">
+<img src="https://github.com/phopley/rodney-project/blob/master/docs/images/rosgraph_pantiltv2.png" title="Pan Tilt Graph">
 From the graph you can see the two nodes are running and are connected by the /servo topic. You can also see that the topic /pan_tilt_node/index0_position has been remapped to /pan_tilt_node/head_position.
 
 We will now open a third terminal and send a message to move the pan/tilt device using rostopic. In a new terminal enter the following commands, don't forget to give the location of the master if running on a different device to that you launch the nodes on.
@@ -440,12 +440,12 @@ $ export ROS_MASTER_URI=http://ubiquityrobot:11311
 $ rosrun rqt_reconfigure rqt_reconfigure
 ```
 This will bring up a user interface like the one shown below. Trim parameters can be dynamically adjusted via the interface.
-<img src="https://github.com/phopley/rodney/blob/master/docs/images/pan_tilt_trim.png" title="Pan Tilt Trim">
+<img src="https://github.com/phopley/rodney-project/blob/master/docs/images/pan_tilt_trim.png" title="Pan Tilt Trim">
 Once you are happy with the trim values you can edit the pan_tilt.cfg to include the new trim values as the defaults. Then the next time the nodes are started these trim values will be used.
 
 To terminate the nodes simply hit Ctrl-c in the terminal.
 ### Head pan tilt device
 For the Pan/Tilt device I’m using two Futaba S3003 servos. You can purchase pan/tilt devices for various size servos, however I chose to 3D print my own version and the stl files for the parts are available in the zip file. I had some concern about the combined weight of the display and Raspberry Pi exerting sideways torque on the pan servo shaft, so I have used a load bearing servo block to alleviate this problem. This unit acts as a servo exoskeleton which enhances the mechanical loads the servo can withstand. It add expense to the robot so an alternative would be to mount just the camera on a smaller pan/tilt device and have the screen fixed in position. The servos I’m using have plastic gears so another alternative could be to use ones with metal gears to withstand this sideways torque, that said the load bearing block is excellent and appears to work well. The following images show the load bearing servo block and the pan/tilt arrangement.
 
-<img src="https://github.com/phopley/rodney/blob/master/docs/images/servoblock.jpg" width="300" height="317" title="Load bearing block"> <img src="https://github.com/phopley/rodney/blob/master/docs/images/Opt-IMG_0388.JPG" width="320" height="213" title="Pan Tilt 1">
-<img src="https://github.com/phopley/rodney/blob/master/docs/images/Opt-IMG_0389.JPG" width="320" height="213" title="Pan Tilt 2"> <img src="https://github.com/phopley/rodney/blob/master/docs/images/Opt-IMG_0391.JPG" width="320" height="213" title="Pan Tilt 3">
+<img src="https://github.com/phopley/rodney-project/blob/master/docs/images/servoblock.jpg" width="300" height="317" title="Load bearing block"> <img src="https://github.com/phopley/rodney-project/blob/master/docs/images/Opt-IMG_0388.JPG" width="320" height="213" title="Pan Tilt 1">
+<img src="https://github.com/phopley/rodney-project/blob/master/docs/images/Opt-IMG_0389.JPG" width="320" height="213" title="Pan Tilt 2"> <img src="https://github.com/phopley/rodney-project/blob/master/docs/images/Opt-IMG_0391.JPG" width="320" height="213" title="Pan Tilt 3">
