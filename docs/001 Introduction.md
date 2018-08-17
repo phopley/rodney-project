@@ -6,8 +6,8 @@ Back sometime in the late 1970’s early 1980’s I brought the following books:
 
 Both books gave names to their robots “Rodney” and “Mike”. For that reason and in honor of one of these books the planned robot is called Rodney.
 
-![alt text](https://github.com/phopley/rodney/blob/master/docs/images/book1.jpg "How to build your own self-programming robot")
-![alt text](https://github.com/phopley/rodney/blob/master/docs/images/book2.jpg "How to build a computer-controlled robot")
+![alt text](https://github.com/phopley/rodney-project/blob/master/docs/images/book1.jpg "How to build your own self-programming robot")
+![alt text](https://github.com/phopley/rodney-project/blob/master/docs/images/book2.jpg "How to build a computer-controlled robot")
 
 As a software engineer I subscribe to the Code Project site https://www.codeproject.com and there are two robotic projects on the site which I have taken some inspiration from.
 
