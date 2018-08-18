@@ -479,3 +479,48 @@ At the workstation run the following to check that the nodes are running and con
 $ export ROS_MASTER_URI=http://ubiquityrobot:11311
 $ rqt_graph
 ```
+<img src="https://github.com/phopley/rodney-project/blob/master/docs/images/part2_face_recognition_node.png" title="face recognition nodes graph">
+If any topics have been misspelt in one part of the code then it will be obvious from the graph as the nodes will not be joined by the topics.
+
+In another terminal enter the following in order to be able to view the images.
+```
+$ export ROS_MASTER_URI=http://ubiquityrobot:11311
+$ rqt_image_view
+```
+In the Image View GUI you can select the topic */camera/image/raw* to view the current camera image. For the test I'm going to select the topic */face_recognition_node/adjusted_image*, the image will currently be blank but when we request a face recognition operation we will be able to view the result.
+
+In yet another terminal we will monitor the result topic with the following:
+```
+$ cd ~/rodney_ws/
+$ export ROS_MASTER_URI=http://ubiquityrobot:11311
+$ source devel/setup.bash
+$ rostopic echo /face_recognition_node/result
+```
+In the final terminal we will send a message on the */face_recognition_node/start* topic to kick off a face recognition operation.
+```
+$ cd ~/rodney_ws/
+$ export ROS_MASTER_URI=http://ubiquityrobot:11311
+$ source devel/setup.bash
+$ rostopic pub -1 /face_recognition_node/start std_msgs/Empty
+```
+When I published the topic without anyone in view of the camera the image viewer displayed an image of the room and the rostopic echo terminal reported empty messages with:
+```
+ids_detected: []
+names_detected: []
+---
+```
+When published with myself in view of the camera the rostopic echo terminal and the image viewer displayed the following:
+```
+ids_detected: [1]
+names_detected: [Phil]
+---
+```
+<img src="https://github.com/phopley/rodney-project/blob/master/docs/images/part2_image_view1.png" title="face recognition image 1">
+When testing with two people in the image, it's trained for both these subjects, I got the following results.
+
+```
+ids_detected: [1, 2]
+names_detected: [Phil, Dave]
+---
+```
+<img src="https://github.com/phopley/rodney-project/blob/master/docs/images/part2_image_view2.png" title="face recognition image 2">
