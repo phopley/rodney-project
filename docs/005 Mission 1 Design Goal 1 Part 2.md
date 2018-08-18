@@ -420,3 +420,62 @@ def callback(self, data):
 ```
 The node package also contains a *config.yaml* file which can be used to set the confidence level without having to recompile the code. The package also contains a launch file, *test.launch*, which can be used to test the node. As well as launching this node, it will launch the camera node and the node to republish the camera image in raw format.
 ## Face recognition message and action
+As stated above the *face_recognition* package uses a user defined message to return the results of an operation looking for known faces. The package *face_recognition_msgs* contains a message, *face_recognition.msg*, and our first ROS action *scan_for_faces.action*.
+
+The files for the package are available in the *face_recognition_msgs* folder.
+
+We covered the creation of user messages in part 1 of this article. As usual the message file is stored in the sub folder *msg*.
+
+The message contains an array of ids and an array of names for any recognised faces.
+```
+uint16[] ids_detected
+string[] names_detected
+```
+The file for the action is stored in the *action* sub folder. An action is used when a node is required to perform a non-blocking task which may take some time. A request is sent to perform the task and a reply is received once the task is complete. Feedback during the task can also be received. The task request can also be cancelled. Here I'll just describe the action specification for the task held in this package, the actual task client/server is described later in the article. That said it is worth noting that this action will be responsible for positioning the camera and requesting the face recognition operation on the current image.
+
+More information on ROS actions can be [found here](http://wiki.ros.org/actionlib).
+
+An action specification contains a goal, result and feedback section. It looks similar to a message definition file except each of these parts is divided by the three dashes (---).
+```
+# This action scans by moving the head/camera for faces that are recognised
+# There are no parameters to start the action
+---
+# Results of the final image/position scanned
+face_recognition detected
+---
+# Percentage complete and result of the latest image/position scanned
+float32 progress
+face_recognition detected
+```
+Above the first three dashes is the goal. In our case we don't have any parameters for the goal, just the receipt of the goal will start our action.
+
+The result parameters are below the first three dashes and in our case it is of type face_recognition which is defined in our  *face_recognition.msg* file. When the result of the action is returned all the faces detected will be contained in this parameter.
+
+Below the second three dashes is the feedback parameters. In our case we will return a percentage complete of the number of face recognition operations we intend to run for the robots head movement range and the faces detected on the last individual scan.
+
+We will run all the code together towards the end of the article but we can test our face detection node first.
+
+Create a catkin workspace with the following terminal commands.
+```
+$ mkdir -p ~/rodney_ws/src
+$ cd ~/rodney_ws/
+$ catkin_make
+```
+Copy the two package folders *face_recognition* and *face_recognition_msgs* into the *~/rodney_ws/src* folder and then build the code. As a little tip I don't copy the code into the src folder but create a symbolic link in the src folder to the code location. That way I can have a number of workspaces using the same code files.
+```
+$ cd ~/rodney_ws/ 
+$ catkin_make
+```
+Check that the build completes without any errors and then run the code.
+```
+$ cd ~/rodney_ws/
+$ source devel/setup.bash
+$ roslaunch face_recognition test.launch
+```
+With the nodes running on the Raspberry Pi I'm going to use a Linux workstation on the same network to run some test. Note: as we will use our user defined topics the code also needs to be built on this workstation. You can if you wish run the tests on the same Raspberry Pi running the system nodes.
+
+At the workstation run the following to check that the nodes are running and connected to the correct topics. You can see the name of master in the output from running roslaunch. As I'm using the Ubiquity ROS Ubuntu image and have not changed the name my master is *ubiquityrobot*.
+```
+$ export ROS_MASTER_URI=http://ubiquityrobot:11311
+$ rqt_graph
+```
