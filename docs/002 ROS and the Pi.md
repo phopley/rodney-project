@@ -27,7 +27,7 @@ Other Raspberry Pi peripherals that I intend to use on the Rodney project are:
 
 The plan is to use the display for passing status information, web content to the user and also for displaying an animated robot face. The camera will be the eyes of the robot initially being used for facial recognition.
 
-The following images show the 7" display with the Raspberry Pi and camera mounted on the rear of the screen. The camera is mounted using a 3D printed bracket. The stl file for the bracket is available [here]( https://github.com/phopley/rodney-project/blob/master/docs/3D%20Prints/camera%20bracketV2.stl "Camera bracket")
+The following images show the 7" display with the Raspberry Pi and camera mounted on the rear of the screen. The camera is mounted using a 3D printed bracket. The stl file for the bracket is available [here]( https://github.com/phopley/rodney-project/blob/master/hardware/3D%20Prints/camera%20bracketV2.stl "Camera bracket")
 
 <img src="https://github.com/phopley/rodney-project/blob/master/docs/images/Optimized-IMG_0380.JPG" width="427" height="284" title="7inch screen"> <img src="https://github.com/phopley/rodney-project/blob/master/docs/images/Optimized-IMG_0381.JPG" width="427" height="284" title="7inch screen and camera">
 
