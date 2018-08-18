@@ -20,7 +20,7 @@ Now I'm using the Raspberry Pi camera but you can use a different camera. You ma
 ## Detect and recognise faces
 Before the system can attempt to recognise a face we need to train it with the subjects we wish to recognise. We will write two non ROS Python scripts to train our system. The first, *data_set_generator.py*, will use the camera to capture facial images of each of our subjects. The second, *training.py*, uses the images collected by the first script to do the actual training. The output of this second script is a yaml file containing the training data, the ROS node will load this training data during its initialisation. If you wish to add new people to your list of subjects you will need to rerun each script.
 
-Our ROS package for the node is called *face_recognition* and is available in the *face_recognition* folder. The sub folder *scripts* contains our two training scripts.
+Our ROS package for the node is called *face_recognition* and is available in the [face_recognition repository](https://github.com/phopley/face_recognition). The sub folder *scripts* contains our two training scripts.
 
 Each of the scripts makes use of face detection and face recognition built in to OpenCV. If you wish to fully understand how this works then may I suggest you read some of the many articles available on the internet. One of these can be found [here](https://github.com/informramiz/opencv-face-recognition-python). Not one article I came across had the code for exactly what I wanted so I have borrowed code from a number of articles. Here I'll give a high level description of each of the scripts starting with *data_set_generator.py*.
 
