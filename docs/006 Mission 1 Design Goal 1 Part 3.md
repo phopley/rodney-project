@@ -461,3 +461,211 @@ The package also includes a launch file in the *launch* folder. This file, *test
 </launch>
 ```
 ## Action client
+Having included an action server in our node you would expect to have an action client to connect with it, this is definitely one method of communicating with the server. In the next part of the article I'm going to introduce a ROS package which will allow us to create state machines and sub-state machines to control our robot missions. Using this package it is possible to assign an individual state to be the action client and all the communication is done behind the scenes for us.
+
+In order to test the system we have developed so far and to show how to write an action client we will write a test node here which will include an action client for our *scan_for_faces* action.
+
+Our ROS package for the test node is called *rodney_recognition_test* and is available in the [rodney_recognition_test repository folder](https://github.com/phopley/Robotics-test-code/tree/master/rodney_recognition_test). The package contains all the usual ROS files and folders.
+
+The *include/rodney_recognition_test* and *src* folders contain the C++ code for the package. For this package we have one C++ class, RodneyRecognitionTestNode and a main routine contained within the *rodney_recognition_test_node.cpp* file.
+
+The __main__ routine informs ROS of our node, creates an instance of the class for the node and passes it the node handle, logs that the node has started and hands control to ROS with the call to __ros::spin__.
+``` C++
+int main(int argc, char **argv)
+{
+    ros::init(argc, argv, "rodney_test");
+    ros::NodeHandle n;    
+    RodneyRecognitionTestNode rodney_test_node(n);   
+    std::string node_name = ros::this_node::getName();
+	ROS_INFO("%s started", node_name.c_str());
+    ros::spin();
+    return 0;
+}
+```
+The constructor creates an instance of our action client, __ac___, and passes it the name of the action server which in our case is *head_control_node*. This must match the name we gave to our action server when we created it in the __HeadControlNode__ constructor.
+
+We are going to use a keyboard node which is [available here](https://github.com/lrse/ros-keyboard), to interact with the system. In the constructor we subscribe to the topic *keyboard/keydown* and call the function __keyboardCallBack__ when a message is received on that topic.
+
+The call __ac_.waitForServer__ will wait in the constructor until our action server is running.
+``` C++
+// Constructor 
+RodneyRecognitionTestNode::RodneyRecognitionTestNode(ros::NodeHandle n) : ac_("head_control_node", true)
+{
+    nh_ = n;
+    
+    // Subscribe to receive keyboard input
+    key_sub_ = nh_.subscribe("keyboard/keydown", 100, &RodneyRecognitionTestNode::keyboardCallBack, this);
+
+    ROS_INFO("RodneyRecognitionTestNode: Waiting for action server to start");
+
+    // wait for the action server to start
+    ac_.waitForServer(); //will wait for infinite time
+    
+    scanning_ = false;
+
+    ROS_INFO("RodneyRecognitionTestNode: Action server started"); 
+}
+```
+The function __keyboardCallBack__ checks the received message for one of two keys. If the lower case 's' is pressed we will start a complete scan using the robot head range of movement looking for faces recognised. It does this by creating an instance of our action goal and passes it to the action server with a call to __ac_.sendGoal__. With the call we pass three callback functions, 1) __doneCB__ which is called when the action is completed 2) __activeCB__ which is called when the action goes active and 3) __feedbackCB__ which is called when the feedback on the progress of the action is received.
+
+The action can be preempted, so if the lower case 'c' is pressed and scanning is in progress we will cancel the action with a call to __ac_.cancelGoal__.
+``` C++
+void RodneyRecognitionTestNode::keyboardCallBack(const keyboard::Key::ConstPtr& msg)
+{        
+    // Check no modifiers apart from num lock is excepted
+    if((msg->modifiers & ~keyboard::Key::MODIFIER_NUM) == 0)
+    {
+        // Lower case
+        if(msg->code == keyboard::Key::KEY_s)
+        {            
+            // Lower case 's', start a complete scan looking for faces
+            // Send a goal to the action
+            face_recognition_msgs::scan_for_facesGoal goal;
+        
+            // Need boost::bind to pass in the 'this' pointer
+            ac_.sendGoal(goal,
+                boost::bind(&RodneyRecognitionTestNode::doneCB, this, _1, _2),
+                boost::bind(&RodneyRecognitionTestNode::activeCB, this),                
+                boost::bind(&RodneyRecognitionTestNode::feedbackCB, this, _1));
+        }
+        else if(msg->code == keyboard::Key::KEY_c)
+        {          
+            // Lower case 'c', cancel scan if one is running
+            if(scanning_ == true)
+            {
+                ac_.cancelGoal();
+            }        
+        }
+        else
+        {
+            ;
+        }
+    }
+}
+```
+The callback function __activeCB__ is called when the action goes active, here we log the fact and set a member variable indicating that scanning is taking place.
+``` C++
+// Called once when the goal becomes active
+void RodneyRecognitionTestNode::activeCB()
+{
+    ROS_DEBUG("RodneyRecognitionTestNode: Goal just went active");
+    
+    scanning_ = true;
+}
+```
+The callback function __feedbackCB__ is called when feedback on the progress of the action is received. If you remember our feedback includes a percentage complete value and any faces seen on the last individual scan. Here we log the percentage complete and log any names of people just seen.
+``` C++
+// Called every time feedback is received for the goal
+void RodneyRecognitionTestNode::feedbackCB(const face_recognition_msgs::scan_for_facesFeedbackConstPtr& feedback)
+{
+    ROS_DEBUG("Got Feedback percentage complete %f", feedback->progress);    
+    
+    if(feedback->detected.ids_detected.size() > 0)
+    {  
+        for(unsigned long x = 0; x < feedback->detected.ids_detected.size(); x++)
+        {
+            // Log just seen
+            ROS_INFO("RodneyRecognitionTestNode: Just seen %s", feedback->detected.names_detected[x].c_str());          
+        }          
+    }
+}
+```
+The callback function __donCB__ is called when the action is completed. The result data contains all the people seen during the complete scan of the head movement. Here we log a greeting to anyone seen.
+``` C++
+// Called once when the goal completes
+void RodneyRecognitionTestNode::doneCB(const actionlib::SimpleClientGoalState& state,
+                        const face_recognition_msgs::scan_for_facesResultConstPtr& result)
+{
+    ROS_DEBUG("RodneyRecognitionTestNode: Finished in state [%s]", state.toString().c_str());
+    scanning_ = false;    
+
+    if(result->detected.ids_detected.size() > 0)
+    {  
+        for(unsigned long x = 0; x < result->detected.ids_detected.size(); x++)
+        {
+            // Log we have seen you now!
+            ROS_INFO("RodneyRecognitionTestNode: Hello %s, how are you?", result->detected.names_detected[x].c_str());            
+        }            
+    }
+}
+```
+## Using the code
+As previously when testing the code, I'm going to run the system code on the Raspberry Pi and the test code on a separate Linux workstation. The Raspberry Pi will also be connected to the Arduino nano which in turn is connected to the servos and running the sketch from part one of the article.
+
+The package versions used in this test were:
+* pan_tilt V0.1.5 [pan_tilt repository](https://github.com/phopley/pan_tilt)
+* servo_msgs V0.1.2 [servo_msgs repository](https://github.com/phopley/servo_msgs)
+* face_recognition V0.1.2 [face_recognition repository](https://github.com/phopley/face_recognition)
+* face_recognition_msgs V0.1.1 [face_recognition_msgs repository](https://github.com/phopley/face_recognition_msgs)
+* head_control V0.1.1 [head_control repository](https://github.com/phopley/head_control)
+
+### Building the ROS packages on the Pi
+If not already done create a catkin workspace on the Raspberry Pi and initialise it with the following commands:
+```
+$ mkdir -p ~/rodney_ws/src
+$ cd ~/rodney_ws/
+$ catkin_make
+```
+Copy the packages *rodney_recognition_test*, *face_recognition*, *face_recognition_msgs*, *head_control*, *pan_tilt* and *servo_msgs* into the ~/rodney_ws/src folder and then build the code with the following commands:
+```
+$ cd ~/rodney_ws/ 
+$ catkin_make
+```
+Check that the build completes without any errors.
+### Building the ROS test packages on the workstation
+You can build and run the test packages on the Raspberry Pi but I'm going to use a Linux workstation which is on the same network as the Pi.
+
+Create a workspace with the following commands:
+```
+$ mkdir -p ~/test_ws/src 
+$ cd ~/test_ws/ 
+$ catkin_make
+```
+Copy the packages *face_recognition_msgs*, *rodney_recognition_test* and *ros-keyboard* ([from](https://github.com/lrse/ros-keyboard)) into the *~/test_ws/src* folder and then build the code with the following commands:
+```
+$ cd ~/test_ws/ 
+$ catkin_make
+```
+Check that the build completes without any errors.
+### Running the code
+Now we are ready to run our code. With the Arduino connected to a USB port use the launch file to start the nodes with the following commands. If no master node is running in a system the launch command will also launch the master node, roscore:
+```
+$ cd ~/rodney_ws/
+$ source devel/setup.bash
+$ roslaunch head_control test.launch
+```
+In the terminal you should see:
+
+* a list of parameters now in the parameter server
+* a list of our nodes
+* the address of the master
+* log information from our code
+
+Next I'm going to use rqt_graph and our test code to test the system. I'm going to run the code on the separate workstation which needs to know the address of the machine running the ROS master, if you are running the test code on the Raspberry Pi you can ignore the command about the location of the ROS master.
+
+On the workstation run the following commands to start the keyboard node:
+```
+$ cd ~/test_ws 
+$ source devel/setup.bash 
+$ export ROS_MASTER_URI=http://ubiquityrobot:11311 
+$ rosrun keyboard keyboard
+```
+On the workstation in a second terminal run the following commands to start our test node:
+```
+$ cd ~/test_ws 
+$ source devel/setup.bash 
+$ export ROS_MASTER_URI=http://ubiquityrobot:11311 
+$ rosrun rodney_recognition_test rodney_recognition_test_node
+```
+In a third terminal run the following commands to start rqt_graph:
+```
+$ cd ~/test_ws
+$ export ROS_MASTER_URI=http://ubiquityrobot:11311
+$ rqt_graph
+```
+<img src="https://github.com/phopley/rodney-project/blob/master/docs/images/part2_system_graph.png" title="system">
+From the graph you should see the nodes for both the system and the test code running. You should also see the nodes linked by the topics. Any broken links is an indication of misspelt topics in the code.
+
+The workstation should also be running a small window whose title is "ROS keyboard input". Make sure this window has the focus and then press the lower case 's' key. The head should start moving and scanning for faces it recognises as it goes. The terminal which you started the rodney_recognition_test_node in should report any faces it recognised for each individual scan. When all the scans are complete the head should return to the default position and a greeting for each individual seen will be displayed in the same terminal.
+
+During a scan press the lower case 'c' key to cancel the action, the head should return to the default position.
