@@ -422,7 +422,7 @@ The node package also contains a *config.yaml* file which can be used to set the
 ## Face recognition message and action
 As stated above the *face_recognition* package uses a user defined message to return the results of an operation looking for known faces. The package *face_recognition_msgs* contains a message, *face_recognition.msg*, and our first ROS action *scan_for_faces.action*.
 
-The files for the package are available in the *face_recognition_msgs* folder.
+The files for the package are available in the [face_recognition_msgs repository](https://github.com/phopley/face_recognition_msgs).
 
 We covered the creation of user messages in part 1 of this article. As usual the message file is stored in the sub folder *msg*.
 
@@ -454,6 +454,12 @@ The result parameters are below the first three dashes and in our case it is of 
 Below the second three dashes is the feedback parameters. In our case we will return a percentage complete of the number of face recognition operations we intend to run for the robots head movement range and the faces detected on the last individual scan.
 
 We will run all the code together towards the end of the article but we can test our face detection node first.
+
+The package versions used in this test were:
+* pan_tilt V0.1.5 [pan_tilt repository](https://github.com/phopley/pan_tilt)
+* servo_msgs V0.1.2 [servo_msgs repository](https://github.com/phopley/servo_msgs)
+* face_recognition V0.1.2 [face_recognition repository](https://github.com/phopley/face_recognition)
+* face_recognition_msgs V0.1.1 [face_recognition_msgs repository](https://github.com/phopley/face_recognition_msgs)
 
 Create a catkin workspace with the following terminal commands.
 ```
