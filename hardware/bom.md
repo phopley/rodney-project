@@ -12,5 +12,7 @@
 | Load Bearing Servo block (Futaba)                  | x1  | £25.39      | www.robotshop.com/uk/ |
 | RC Servo Futaba S3003                              | x2  |             |                       |
 | Adafruit Mono 2.5W Class D Audio Amplifier PAM8302 | x1  | £4          | https://thepihut.com/ |
+| 8 Ohm Speaker                                      | x1  |             |                       |
+| Audio lead                                         | x1  |             |                       |
 | Assorted servo lead extensions                     |     |             |                       |
 | Screw button head hex M2.5 x 16mm (fan bracket)    |     |             |                       |
