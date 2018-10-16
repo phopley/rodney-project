@@ -283,7 +283,118 @@ void SpeechNode::speakingFinished()
 ## Face and Voice Integration
 In the next chapter, we will bring the nodes from Goal 1 and Goal 2 together along with a state machine package that will be used to control the robot missions. For now, it is worth testing the robot face with our speech node.
 
-Our ROS package for the test node is called __rodney_voice_test__ and the files that make up this package are available in the [Robotics-test-code repository](https://github.com/phopley/Robotics-test-code/tree/master/rodney_voice_test "Robotics-test-code repository rodney_voice_test folder").
+Our ROS package for the test node is called __rodney_voice_test__ and the files that make up this package are available in the [Robotics-test-code repository rodney_voice_test folder](https://github.com/phopley/Robotics-test-code/tree/master/rodney_voice_test "Robotics-test-code repository rodney_voice_test folder").
 
 The *include/rodney_voice_test* and *src* folders contain the C++ code for the package. For this package, we have one C++ class, __RodneyVoiceTestNode__ and a __main__ routine contained within the *rodney_voice_test_node.cpp* file.
 
+The __main__ routine informs ROS of our node, creates an instance of the class for the node and passes it the node handle, logs that the node has started and hands control to ROS with the call to __ros::spin__.
+``` C++
+int main(int argc, char **argv)
+{
+    ros::init(argc, argv, "rodney_voice_test");
+    ros::NodeHandle n;    
+    RodneyVoiceTestNode rodney_test_node(n);   
+    std::string node_name = ros::this_node::getName();
+	ROS_INFO("%s started", node_name.c_str());
+    ros::spin();
+    return 0;
+}
+```
+We are going to use a keyboard node which is available from https://github.com/lrse/ros-keyboard, to interact with the system. In the constructor, we subscribe to the topic *keyboard/keydown* and call the function __keyboardCallBack__ when a message is received on that topic.
+
+The constructor also advertises that the node will publish the topics for the speech and robot face node.
+``` C++
+RodneyVoiceTestNode::RodneyVoiceTestNode(ros::NodeHandle n)
+{
+    nh_ = n;
+    
+    // Subscribe to receive keyboard input
+    key_sub_ = nh_.subscribe("keyboard/keydown", 100, &RodneyVoiceTestNode::keyboardCallBack, this);
+
+    // Advertise the topics we publish
+    speech_pub_ = nh_.advertise<speech::voice>("/speech/to_speak", 5);
+    face_status_pub_ = nh_.advertise<std_msgs::String>("/robot_face/expected_input", 5);
+    text_out_pub_ = nh_.advertise<std_msgs::String>("/robot_face/text_out", 5);
+
+}
+```
+The function __keyboardCallBack__ checks the received message for one of three keys. If the lower case 's' is pressed, we test the status display functionality by creating a message and publish it on the */robot_face/expected_input* topic.
+
+If the lower case 't' is pressed, we test the speech and speech animation by creating two messages, one that contains the text to speak and the other contains the text to animate the robot face. Note how we add the ':)' smiley to the __greeting__ variable after we have used it to create the text to speak message, we don't want __pico2wav__ trying to speak this as part of the text. We then publish the two messages, one to the face and the other to the speech node.
+
+If the lower case 'w' is pressed, we test the wav file playback and speech animation again by creating two messages. This time, the message going to the speech node contains the path to a wav file instead of the text to speak. Notice however the message to the robot face still contains text to match the contents of the wav file so that the face is still animated during playback.
+``` C++
+void RodneyVoiceTestNode::keyboardCallBack(const keyboard::Key::ConstPtr& msg)
+{  
+    // Check no modifiers apart from num lock is excepted
+    if((msg->modifiers & ~keyboard::Key::MODIFIER_NUM) == 0)
+    {
+        // Lower case
+        if(msg->code == keyboard::Key::KEY_s)
+        {            
+            // Test status display
+            std_msgs::String status_msg;            
+            status_msg.data = "Rodney on line";
+            face_status_pub_.publish(status_msg);                                       
+        }
+        else if(msg->code == keyboard::Key::KEY_t)
+        {
+            // Test speech and animation
+                      
+            // String to send to robot face
+            std_msgs::String greeting;
+            greeting.data = "Hello my name is Rodney";
+            
+            // Voice message
+            speech:: voice voice_msg;
+            voice_msg.text = greeting.data;
+            voice_msg.wav = "";
+            
+            // Add the smiley
+            greeting.data += ":)";
+            
+            // Publish topics for speech and robot face animation
+            text_out_pub_.publish(greeting);
+            speech_pub_.publish(voice_msg);
+        }
+        else if(msg->code == keyboard::Key::KEY_w)
+        {
+            // Test wav playback and animation
+            // String to send to robot face
+            std_msgs::String greeting;
+            greeting.data = "Danger Will Robinson danger:&";
+            
+            speech:: voice voice_msg;            
+            std::string path = ros::package::getPath("rodney_voice_test");
+            voice_msg.text = "";
+            voice_msg.wav = path + "/sounds/lost_in_space_danger.wav";            
+        
+            // Publish topics for sound and robot face animation
+            text_out_pub_.publish(greeting);
+            speech_pub_.publish(voice_msg);        
+        }
+        else
+        {
+            ;
+        }
+    }
+}
+```
+The folder *launch* contains the file *test.launch*. This file will be used to launch the two nodes under test and the two test nodes from one terminal.
+``` XML
+<?xml version="1.0" ?>
+<launch>  
+  <node pkg="homer_robot_face" type="RobotFace" name="RobotFace" output="screen"/>
+  <node pkg="speech" type="speech_node" name="speech_node" output="screen"/>
+  <node pkg="rodney_voice_test" type="rodney_voice_test_node" 
+
+        name="rodney_voice_test_node" output="screen" />
+  <node pkg="keyboard" type="keyboard" name="keyboard" output="screen" />
+</launch>
+```
+## Using the code
+You can test the code on either a Linux PC or on the robot hardware, in my case a Raspberry Pi.
+### Robot Hardware
+Now if you are testing the code on a PC, you probably already have a speaker and amplifier built in, but as our robot is built around a Raspberry Pi, we need some hardware to hear the voice playback. I have added an Adafruit Mono 2.5W Class D Audio Amplifier PAM8302 and an 8 Ohn speaker to the hardware. I have simply connected this to the Pi audio jack, the speaker and Pi's 5V supply.
+
+The audio amp is on a small Veroboard mounted on the back of the tilt arm and the speaker is mounted on the front of the neck, just below the pan servo.
