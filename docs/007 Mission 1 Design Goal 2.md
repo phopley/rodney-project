@@ -394,7 +394,90 @@ The folder *launch* contains the file *test.launch*. This file will be used to l
 ```
 ## Using the code
 You can test the code on either a Linux PC or on the robot hardware, in my case a Raspberry Pi.
+
+The package versions used in this test were:
+* speech V0.1.1 [speech repository](https://github.com/phopley/speech/releases/tag/V0.1.1)
+
 ### Robot Hardware
 Now if you are testing the code on a PC, you probably already have a speaker and amplifier built in, but as our robot is built around a Raspberry Pi, we need some hardware to hear the voice playback. I have added an Adafruit Mono 2.5W Class D Audio Amplifier PAM8302 and an 8 Ohn speaker to the hardware. I have simply connected this to the Pi audio jack, the speaker and Pi's 5V supply.
 
 The audio amp is on a small Veroboard mounted on the back of the tilt arm and the speaker is mounted on the front of the neck, just below the pan servo.
+
+<img src="https://github.com/phopley/rodney-project/blob/master/docs/images/Opt-IMG_0395.JPG" title="Audio amp">
+<img src="https://github.com/phopley/rodney-project/blob/master/docs/images/Opt-IMG_0396.JPG" title="Speaker">
+
+Whist on the subject of hardware. When I first started running the robot face node, the UK was in the middle of a heatwave and I found that the Raspberry Pi was sometimes over heating. I have therefore added a small heat sink and fan to the processor board. Within the 3D print zip folder, there is a bracket to attach the fan to the Raspberry Pi.
+### System Applications
+If not already installed, install the pico2wav and SoundeXchange applications.
+```
+$ sudo apt-get install libttspico-utils
+
+$ sudo apt-get install sox libsox-fmt-all
+```
+### Building the ROS Packages
+Create a workspace with the following commands:
+```
+$ mkdir -p ~/test_ws/src 
+$ cd ~/test_ws/ 
+$ catkin_make
+```
+Copy the packages __rodney_voice_test__, __speech__ and __ros-keyboard__ (from https://github.com/lrse/ros-keyboard) into the *~/test_ws/src* folder and then build the code with the following commands:
+```
+$ cd ~/test_ws/ 
+$ catkin_make
+```
+Check that the build completes without any errors.
+### Running the Code
+Now we are ready to run our code. Use the launch file to start the nodes with the following commands. If no master node is running in a system, the launch command will also launch the master node, __roscore__.
+```
+$ cd ~/test_ws/
+$ source devel/setup.bash
+$ roslaunch rodney_voice_test test.launch
+```
+In the terminal, you should see:
+* a list of parameters now in the parameter server
+* a list of our nodes
+* the address of the master
+* log information from our code
+
+Two other windows will open, one with robot face and a second that when given the focus will input keyboard strokes.
+
+In a second terminal, run the following command to start __rqt_graph__.
+```
+$ rqt_graph
+```
+<img src="https://github.com/phopley/rodney-project/blob/master/docs/images/Opti-voice_test_graph.png" title="Voice graph">
+From the graph, you should see the nodes under test and the test nodes running. You should also see the nodes linked by the topics. Any broken links is an indication of misspelt topics in the code.
+
+The robot face will currently have a neutral expression. Run the following tests:
+
+ 1. Make sure the keyboard window has the focus and press the 's' key.
+ 2. The status message will appear below the face.
+ 3. Make sure the keyboard window has the focus and press the 't' key.
+ 4. The robot voice will be heard and the robot face mouth will be animated. It will end with a happy expression.
+ 5. Make sure the keyboard window has the focus and press the 'w' key.
+ 6. The wav file playback will be heard and the robot face mouth will be animated. It will end with a frightened expression.
+ 
+Next, you can adjust the playback parameters of the voice. In a terminal, start __rqt_reconfigure__ with the following command:
+```
+rosrun rqt_reconfigure rqt_reconfigure
+```
+This will bring up a user interface like the one shown below. Adjust the parameters, give the keyboard window the focus and press 't' to hear the difference.
+
+<img src="https://github.com/phopley/rodney-project/blob/master/docs/images/Opti-reconfigure_speech_node.png" title="speech configuration">
+Once you are happy with the values, you can edit the *speech.cfg* to include the values as the defaults. Then the next time the speech node starts, these values will be used. Note although the *speech.cfg* file is Python, you must re-make the package for the changes to take effect.
+
+To terminate the nodes, hit Ctrl-c in the terminal.
+
+If you have run the robot face node on the Raspberry Pi, you may have noticed that the face is not central to the screen. The flavour of Ubuntu (Lubuntu) I'm running on Rodney uses openbox for controlling the GUI. By editing *.config/openbox/lubuntu-rc.xml* and adding the following to the file, the Robot Face is displayed in the centre of the screen when it launches.
+``` XML
+        <application name="RobotFace">
+            <position force="yes">
+                <x>200</x>
+                <y>0</y>
+            </position>
+        </application>
+
+    </applications>
+</openbox_config>
+```
