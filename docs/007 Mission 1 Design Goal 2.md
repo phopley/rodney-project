@@ -43,6 +43,7 @@ $ rosrun homer_robot_face RobotFace
 ```
 Running on my Linux PC, I got the following neutral facial expression.
 <img src="https://github.com/phopley/rodney-project/blob/master/docs/images/Opt-rodney_face.png" title="Testing face code">
+
 In another terminal, enter the following command:
 ```
 $ rqt_graph
@@ -87,7 +88,7 @@ Now the installation of the robot face package will also have installed The MARY
 
 Our ROS package for the node is called __speech__ and the files that make up this package are available in the [speech repository](https://github.com/phopley/speech "speech repository"). The package contains all the usual ROS files and folders.
 
-The *cfg* folder contains the file *speech.cfg*. This file is used by the dynamic reconfiguration server so that we can adjust some of the wav playback parameters on the fly. We used the dynamic reconfiguration server in part 1 of the article to trim the servos. This file contains the follow Python code.
+The *cfg* folder contains the file *speech.cfg*. This file is used by the dynamic reconfiguration server so that we can adjust some of the wav playback parameters on the fly. We used the dynamic reconfiguration server in the chapter, Design Goal 1 Part 1 Pan & Tilt, to trim the servos. This file contains the follow Python code.
 ``` Python
 #!/usr/bin/env python
 PACKAGE = "speech"
@@ -121,7 +122,7 @@ The *msg* folder contains a definition file for a user defined message. The file
 string text # Text to speak
 string wav  # Path to file to play
 ```
-The message contains two elements, __text__ will contain the text to turn into speech and wav will contain a path and filename of a wav file to play. Our code will first check to see if wav contains a path and if so, it will play the wav file, if __wav__ is an empty __string__, then __text__ will be used to create a wav file.
+The message contains two elements, __text__ will contain the text to turn into speech and __wav__ will contain a path and filename of a wav file to play. Our code will first check to see if __wav__ contains a path and if so, it will play the wav file, if __wav__ is an empty __string__, then __text__ will be used to create a wav file.
 
 The *include/speech* and *src* folders contain the C++ code for the package. For this package we have one C++ class, __SpeechNode__ and a __main__ routine contained within the *speech_node.cpp* file.
 
@@ -406,7 +407,7 @@ The audio amp is on a small Veroboard mounted on the back of the tilt arm and th
 <img src="https://github.com/phopley/rodney-project/blob/master/docs/images/Opt-IMG_0395.JPG" title="Audio amp">
 <img src="https://github.com/phopley/rodney-project/blob/master/docs/images/Opt-IMG_0396.JPG" title="Speaker">
 
-Whist on the subject of hardware. When I first started running the robot face node, the UK was in the middle of a heatwave and I found that the Raspberry Pi was sometimes over heating. I have therefore added a small heat sink and fan to the processor board. Within the 3D print zip folder, there is a bracket to attach the fan to the Raspberry Pi.
+Whist on the subject of hardware. When I first started running the robot face node, the UK was in the middle of a heatwave and I found that the Raspberry Pi was sometimes over heating. I have therefore added a small heat sink and fan to the processor board. [Within the projects 3D print folder](https://github.com/phopley/rodney-project/tree/master/hardware/3D%20Prints "3D prints folder"), there is a bracket to attach the fan to the Raspberry Pi.
 ### System Applications
 If not already installed, install the pico2wav and SoundeXchange applications.
 ```
@@ -465,6 +466,7 @@ rosrun rqt_reconfigure rqt_reconfigure
 This will bring up a user interface like the one shown below. Adjust the parameters, give the keyboard window the focus and press 't' to hear the difference.
 
 <img src="https://github.com/phopley/rodney-project/blob/master/docs/images/Opti-reconfigure_speech_node.png" title="speech configuration">
+
 Once you are happy with the values, you can edit the *speech.cfg* to include the values as the defaults. Then the next time the speech node starts, these values will be used. Note although the *speech.cfg* file is Python, you must re-make the package for the changes to take effect.
 
 To terminate the nodes, hit Ctrl-c in the terminal.
