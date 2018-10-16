@@ -9,4 +9,21 @@ The hardware making up the robot head includes the 7" Touchscreen Display which 
 We will make use of the __homer_robot_face__ package from the University of Koblenz. This package includes two different selectable faces but it is also possible to model your own character. This package also includes speech synthesis using the Mary TTS (Text to Speech) generator. As this consumes a lot of memory, it is not suitable for single board computers, but we will write our own TTS node suitable for the Raspberry Pi later in this article.
 
 This video from the University of Koblenz shows the range of facial expressions available with the package.
-[![IMAGE ALT TEXT](http://img.youtube.com/vi/jgcztp_jAQE/0.jpg)](http://www.youtube.com/watch?v=jgcztp_jAQE "Video Title")
+[![YouTube](http://img.youtube.com/vi/jgcztp_jAQE/0.jpg)](http://www.youtube.com/watch?v=jgcztp_jAQE "Homer Face")
+
+To install the robot face package for ROS Kinetic, run the following command in a terminal.
+```
+$ sudo apt-get install ros-kinetic-homer-robot-face
+```
+The configuration of the face is done by editing the *config.cfg file*. It would have been more user friendly if you could pass the path of a configuration file to the node, but the location of the file appears to be hard code. It is therefore necessary to edit the file within the package folder. The folder */opt/ros/kinetic/share/homer_robot_face/config* contains the *config.cfg* file and a number of example files. The package comes with two sets of mesh files, 'Lisa' represents a female face and 'GiGo' a male face. For the Rodney project, I edited the config.cfg file to contain the following:
+```
+Mesh Filename : GiGo
+Head Color : 1.0, 1.0, 1.0
+Iris Color : 0.0, 1.0, 1.0
+Outline Color : 0.0, 0.0, 0.0
+Voice : male
+Window Width : 600
+Window Height : 600
+Window Rotation : 0
+```
+Since we will be using our own speech synthesis node, the __Voice__ parameter is not actually used.
