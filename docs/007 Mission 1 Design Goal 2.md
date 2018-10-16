@@ -281,3 +281,9 @@ void SpeechNode::speakingFinished()
 }
 ```
 ## Face and Voice Integration
+In the next chapter, we will bring the nodes from Goal 1 and Goal 2 together along with a state machine package that will be used to control the robot missions. For now, it is worth testing the robot face with our speech node.
+
+Our ROS package for the test node is called __rodney_voice_test__ and the files that make up this package are available in the [Robotics-test-code repository](https://github.com/phopley/Robotics-test-code/tree/master/rodney_voice_test "Robotics-test-code repository rodney_voice_test folder").
+
+The *include/rodney_voice_test* and *src* folders contain the C++ code for the package. For this package, we have one C++ class, __RodneyVoiceTestNode__ and a __main__ routine contained within the *rodney_voice_test_node.cpp* file.
+
