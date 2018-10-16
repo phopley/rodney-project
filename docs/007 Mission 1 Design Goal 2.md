@@ -42,3 +42,49 @@ In a second terminal, start the robot face node with the following command:
 $ rosrun homer_robot_face RobotFace
 ```
 Running on my Linux PC, I got the following neutral facial expression.
+<img src="https://github.com/phopley/rodney-project/blob/master/docs/images/Opt-rodney_face.png" title="Testing face code">
+In another terminal, enter the following command:
+```
+$ rqt_graph
+```
+From the graph, we can see that the node subscribes to the following topic:
+* */robot_face/talking_finshed* - Once you have finished generating the speech, you are required to send a message on this topic
+* */robot_face_expected_input* - With this topic, you can display a status message which appears below the face
+* */robot_face_image_display* - Not used in the Rodney project
+* */robot_face_ImageFileDisplay* - Not used in the Rodney project
+* */robot_face/text_out* - Text in this topic is used to animate the mouth to match the voice and the text appears below the face. By embedding smileys in the text, you can change the facial expression
+* */recognized/speech* - Not used in the Rodney project
+
+We can use rostopic to see this in action. In a terminal, type the following commands:
+```
+$ rostopic pub -1 /robot_face/expected_input std_msgs/String "Battery Low"
+```
+You should see the status message displayed below the face.
+```
+$ rostopic pub -1 /robot_face/text_out std_msgs/String "Hello my name is Rodney:)"
+```
+You should see the text below the face (minus the smiley), the face should animate the speech and change from the neutral expression to an happy expression.
+
+Now send the following command to indicate the speech is complete.
+```
+$ rostopic pub -1 /robot_face/talking_finshed st_msgs/String "q"
+```
+It doesn't matter what this __string__ contains but until you send this message, the face will not respond to another */robot_face/text_out message*.
+
+In the */robot_face/text_out* message above, we changed the expression by use of a smiley ":)", the list below gives the smileys available.
+
+* "." Neutral
+* ":)" Happy
+* ":(" Sad
+* ">:" Angry
+* ":!" Disgusted
+* ":&" Frightened
+* ":O" or ":o" Surprised
+
+We will come back to the robot face node when we integrate it into our system.
+## Giving Rodney a Voice
+Now the installation of the robot face package will also have installed The MARY TTS System, however we are going to write a ROS node that uses the much simpler __pico2wav__ TTS system. Our node will use __pico2wav__ to generate a temporary *wav* file which will then be played back. We will also add functionality to play existing short wav files.
+
+Our ROS package for the node is called __speech__ and is available in the *speech* folder. The package contains all the usual ROS files and folders.
+
+The *cfg* folder contains the file *speech.cfg*. This file is used by the dynamic reconfiguration server so that we can adjust some of the wav playback parameters on the fly. We used the dynamic reconfiguration server in part 1 of the article to trim the servos. This file contains the follow Python code.
