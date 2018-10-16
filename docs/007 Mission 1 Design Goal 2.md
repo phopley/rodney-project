@@ -85,7 +85,7 @@ We will come back to the robot face node when we integrate it into our system.
 ## Giving Rodney a Voice
 Now the installation of the robot face package will also have installed The MARY TTS System, however we are going to write a ROS node that uses the much simpler __pico2wav__ TTS system. Our node will use __pico2wav__ to generate a temporary *wav* file which will then be played back. We will also add functionality to play existing short wav files.
 
-Our ROS package for the node is called __speech__ and the files that make up this package are available in the [speech repository]https://github.com/phopley/speech "speech repository"). The package contains all the usual ROS files and folders.
+Our ROS package for the node is called __speech__ and the files that make up this package are available in the [speech repository](https://github.com/phopley/speech "speech repository"). The package contains all the usual ROS files and folders.
 
 The *cfg* folder contains the file *speech.cfg*. This file is used by the dynamic reconfiguration server so that we can adjust some of the wav playback parameters on the fly. We used the dynamic reconfiguration server in part 1 of the article to trim the servos. This file contains the follow Python code.
 ``` Python
