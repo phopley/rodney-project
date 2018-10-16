@@ -85,6 +85,199 @@ We will come back to the robot face node when we integrate it into our system.
 ## Giving Rodney a Voice
 Now the installation of the robot face package will also have installed The MARY TTS System, however we are going to write a ROS node that uses the much simpler __pico2wav__ TTS system. Our node will use __pico2wav__ to generate a temporary *wav* file which will then be played back. We will also add functionality to play existing short wav files.
 
-Our ROS package for the node is called __speech__ and is available in the *speech* folder. The package contains all the usual ROS files and folders.
+Our ROS package for the node is called __speech__ and the files that make up this package are available in the [speech repository]https://github.com/phopley/speech "speech repository"). The package contains all the usual ROS files and folders.
 
 The *cfg* folder contains the file *speech.cfg*. This file is used by the dynamic reconfiguration server so that we can adjust some of the wav playback parameters on the fly. We used the dynamic reconfiguration server in part 1 of the article to trim the servos. This file contains the follow Python code.
+``` Python
+#!/usr/bin/env python
+PACKAGE = "speech"
+
+from dynamic_reconfigure.parameter_generator_catkin import *
+
+gen = ParameterGenerator()
+
+gen.add("pitch",  int_t,    0, "Playback Pitch",  -300,  -1000, 1000)
+gen.add("vol",    double_t, 0, "Playback volume", 0.75, 0,   1)
+gen.add("bass",   int_t,    0, "Bass",            0, -10, 10)
+gen.add("treble", int_t,   0, "Treble",          0, -10, 10)
+gen.add("norm",   bool_t,   0, "Normalise audio", True)
+
+lang_enum = gen.enum([ gen.const("en_US", str_t, "en-US", "English US"),
+                       gen.const("en_GB", str_t, "en-GB", "English GB"),
+                       gen.const("fr_FR", str_t, "fr-FR", "French"),
+                       gen.const("es_ES", str_t, "es-ES", "Spanish"),
+                       gen.const("de_DE", str_t, "de-DE", "German"),
+                       gen.const("it_IT", str_t, "it-IT", "Italian")],
+                     "An enum to set the language")
+
+gen.add("lang", str_t, 0, "Voice language", "en-GB", edit_method=lang_enum)
+
+exit(gen.generate(PACKAGE, "speechnode", "Speech"))
+```
+For a complete understanding of the dynamic reconfiguration server, refer to the ROS Wiki [section dynamic reconfiguration](http://wiki.ros.org/dynamic_reconfigure "section dynamic reconfiguration"). For now in our file, you can see that we add six parameters to the dynamic configuration server.
+
+The *msg* folder contains a definition file for a user defined message. The file is named *voice.msg* and contains the following:
+```
+string text # Text to speak
+string wav  # Path to file to play
+```
+The message contains two elements, __text__ will contain the text to turn into speech and wav will contain a path and filename of a wav file to play. Our code will first check to see if wav contains a path and if so, it will play the wav file, if __wav__ is an empty __string__, then __text__ will be used to create a wav file.
+
+The *include/speech* and *src* folders contain the C++ code for the package. For this package we have one C++ class, __SpeechNode__ and a __main__ routine contained within the *speech_node.cpp* file.
+
+The __main__ routine informs ROS of our node, creates an instance of our class which contains the code for the node, passes a callback function to the dynamic reconfiguration server and creates a __ros::Rate__ variable which will be used to time our control loop to 10Hz. When inside the loop we call __r.sleep__, this __Rate__ instance will attempt to keep the loop at 10Hz by accounting for the time used to complete the work in the loop.
+
+Our loop will continue while the call to __ros::ok__ returns __true__, it will return __false__ when the node has finished shutting down, e.g., when you press Ctrl-c on the keyboard.
+
+In the loop, we will call __speakingFinshed__ which is described later in the article.
+``` C++
+int main(int argc, char **argv)
+{
+	ros::init(argc, argv, "speech_node");
+			
+	SpeechNode *speech_node = new SpeechNode();
+	
+	dynamic_reconfigure::Server<speech::SpeechConfig> server;
+    dynamic_reconfigure::Server<speech::SpeechConfig>::CallbackType f;
+  	
+  	f = boost::bind(&SpeechNode::reconfCallback, speech_node, _1, _2);
+    server.setCallback(f);
+  
+    std::string node_name = ros::this_node::getName();
+	ROS_INFO("%s started", node_name.c_str());
+	
+	// We want a delay from when a speech finishes to when /robot_face/talking_finished is published
+	
+	ros::Rate r(speech_node->LOOP_FREQUENCY_);
+	
+    while(ros::ok())
+    {
+        // See if /robot_face/talking_finished should be published published
+        speech_node->speakingFinished();
+        
+        ros::spinOnce();
+        r.sleep();
+    }
+    
+	return 0;
+}
+```
+The constructor for our class subscribes to the topic */speech/to_speak* in order to receive the text to speak or the location of the wav file to play. It also advertises that it will publish the topic */robot_face/talking_finshed*. As we know, this topic informs the face that the talking has finished.
+``` C++
+// Constructor 
+SpeechNode::SpeechNode()
+{
+    voice_sub_ = n_.subscribe("/speech/to_speak", 5, &SpeechNode::voiceCallback, this);
+
+    talking_finished_pub_ = n_.advertise<std_msgs::String>("/robot_face/talking_finished", 5);
+    
+    finshed_speaking_ = false;
+}
+```
+I'll now briefly describe the functions that make up the class.
+
+The function __reconfCallback__ is called by the dynamic reconfiguration server if any of the parameters are changed. The function simply stores the new values for use in the next playback of the temporary speech wav file.
+``` C++
+// This callback is for when the dynamic configuration parameters change
+void SpeechNode::reconfCallback(speech::SpeechConfig &config, uint32_t level)
+{
+    language_ = config.lang;
+    vol_ = config.vol;
+    pitch_ = config.pitch;
+    bass_ = config.bass;
+    treble_ = config.treble;
+    norm_ = config.norm;
+}
+```
+The __voiceCallback__ function is called when a message on the */speech/to_speak* topic is received. If the wav element of the message is not empty, then the supplied wav filename is played using sox (Sound eXchange). Note that since we want to playback an already existing wav file and not to speak in our robot's voice, none of the dynamic reconfiguration parameters are used.
+
+If the __wav__ element is empty, then __string__ in the __text__ element is to be spoken. We start by constructing a __string__ for the call to __pico2wav__, this __string__ includes our temporary filename, and the language parameter. The call to __pico2wav__ should result in the creation of a wav file without text converted to speech. A __string__ is then constructed to be used in making a system call to sox, this time we use the dynamic reconfiguration parameters so that we can control the sound of the robot's voice. For example, __pico2wav__ only contains a female voice but by changing the pitch, we can give the robot a male voice (which we want since ours is called Rodney).
+
+The function finishes by setting a flag to indicate that we need to send a message on the */robot_face/talking_finshed* topic. We also set a countdown counter value which is used to time 20 executions of the control loop before the */robot_face/talking_finshed* message is sent.
+``` C++
+// This callback is for when a voice message received
+void SpeechNode::voiceCallback(const speech::voice& voice)
+{               
+    // Check to see if we have a path to a stock wav file
+    if(voice.wav != "")
+    {       
+        // Play stock wav file
+        // Use play in sox (Sound eXchange) to play the wav file, 
+        // --norm stops clipping and -q quite mode (no console output)
+        std::string str = "play " +  voice.wav + " --norm -q";        
+                                             
+        ROS_DEBUG("%s", str.c_str());               
+        
+        if(system(str.c_str()) != 0)
+        {
+            ROS_DEBUG("SpeechNode: Error on wav playback");            
+        }
+    }
+    else
+    {                        
+        std::string filename = "/tmp/robot_speach.wav";                         
+        
+        std::string str;
+        
+        // create wav file using pico2wav from adjusted text.
+        str = "pico2wave --wave=" + filename + " --lang=" + language_ + " \"" + voice.text + "\"";
+        
+        ROS_DEBUG("%s", str.c_str());
+        
+        if(system(str.c_str()) != 0)
+        {
+            ROS_DEBUG("SpeechNode: Error on wav creation");            
+        }
+        else
+        {                
+            // Play created wav file using sox play but use parameters bass, treble, pitch and vol 
+            std::string bass = " bass " + std::to_string(bass_);
+            std::string treble = " treble " + std::to_string(treble_);
+            std::string pitch = " pitch " + std::to_string(pitch_);        
+        
+            if(norm_ == true)
+            {            
+                str = "play " +  filename + " --norm -q" + pitch + bass + treble;          
+            }
+            else
+            {
+                std::string volume = " vol " + std::to_string(vol_);
+                str = "play " +  filename + " -q" + pitch + bass + treble + volume;           
+            }
+        
+            ROS_DEBUG("%s", str.c_str());               
+        
+            if(system(str.c_str()) != 0)
+            {
+                ROS_DEBUG("SpeechNode: Error on wav playback");            
+            }
+        }
+    }
+    
+    // Set up to send talking finished
+    finshed_speaking_ = true;
+    loop_count_down_ = (int)(LOOP_FREQUENCY_ * 2);
+}
+```
+The function __speakingFinished__ is called by the control loop in main. If we have kicked off the playback of either a wav file that already exists or our temporary wav file of text to speak, the function will count down each time it is called. When the counter reaches zero, the talking finished message is published. This gives the robot face node 2 seconds to animate the face before the finished speaking message is sent. You can increase this time if you find your robot has a lot to say, but bear in the mind that the __pico2wav__ is intended for use with a limited number of characters for text to speech conversion.
+``` C++
+// If finshed speaking delay until the /robot_face/talking_finished topic is published
+void SpeechNode::speakingFinished()
+{
+    if(finshed_speaking_ == true)
+    {
+        loop_count_down_--;
+        
+        if(loop_count_down_ <= 0)
+        {
+            finshed_speaking_ = false;
+
+            // Send talking finished 
+            std_msgs::String msg;   
+            msg.data = "";
+            talking_finished_pub_.publish(msg);        
+        }    
+    }
+}
+```
+## Face and Voice Integration
