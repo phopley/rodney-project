@@ -27,3 +27,18 @@ Window Height : 600
 Window Rotation : 0
 ```
 Since we will be using our own speech synthesis node, the __Voice__ parameter is not actually used.
+
+If you wish to get creative and design your own character, there are some notes on modeling a face at http://wiki.ros.org/robot_face.
+
+We can test the installation and the configuration with the following.
+
+In a terminal, start a ROS master node with the following command:
+
+```
+$ roscore
+```
+In a second terminal, start the robot face node with the following command:
+```
+$ rosrun homer_robot_face RobotFace
+```
+Running on my Linux PC, I got the following neutral facial expression.
