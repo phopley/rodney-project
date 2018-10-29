@@ -10,6 +10,11 @@
     <meta name="additionalinformation" value="[details here]" />
     <meta name="guid" value="fe22fcbc-f27f-4640-b16d-f55e2b3e45fd" />
 
+    <property name="Type" type="enum" default="S3003" serialize="t" display="Type">
+      <option>"S3003"</option>
+      <option>"SG92R"</option>
+    </property>
+
     <!-- Can only be displayed horizontally -->
     <flags>
       <option>horizontalonly</option>
@@ -40,10 +45,18 @@
        
       <text value="Servo" x="_Middle" y="_Middle-5y"  align="CentreCentre" />
       <text value="Motor" x="_Middle" y="_Middle+5y"  align="CentreCentre" />
-			
+    </group>
+
+    <group conditions="$Type==S3003">
       <text value="W" x="_Middle-20x" y="_Middle-10y"  align="CentreCentre" />
       <text value="R" x="_Middle-20x" y="_Middle"  align="CentreCentre" />
-      <text value="B" x="_Middle-20x" y="_Middle+10y"  align="CentreCentre" />
+      <text value="Bl" x="_Middle-20x" y="_Middle+10y"  align="CentreCentre" />
+    </group>
+
+    <group conditions="$Type==SG92R">
+      <text value="O" x="_Middle-20x" y="_Middle-10y"  align="CentreCentre" />
+      <text value="R" x="_Middle-20x" y="_Middle"  align="CentreCentre" />
+      <text value="Br" x="_Middle-20x" y="_Middle+10y"  align="CentreCentre" />
     </group>
 		
   </render>
