@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component version="1.2" xmlns="http://schemas.circuit-diagram.org/circuitDiagramDocument/2012/component/xml">
+  <declaration>
+
+    <!-- Describe the component -->
+    <meta name="name" value="OPB704" />
+    <meta name="version" value="1.0" />
+    <meta name="minsize" value="120" />
+    <meta name="author" value="phopley" />
+    <meta name="additionalinformation" value="[details here]" />
+    <meta name="guid" value="53bc2e19-c2be-45cc-95da-79cf7f56b3ab" />
+
+    <!-- Can only be displayed horizontally -->
+    <flags>
+      <option>horizontalonly</option>
+    </flags>
+		
+  </declaration>
+  <connections>
+
+    <!-- Allow other components to connect to each of the pins -->
+    <group>
+      <connection name="a" start="_Middle-40x-30y" end="_Middle-40x-9y" edge="Start" />
+      <connection name="k" start="_Middle-40x+30y" end="_Middle-40x+19" edge="Start" />
+      <connection name="c" start="_Middle+40x-30y" end="_Middle+40x-9y" edge="Start" />
+      <connection name="E" start="_Middle+40x+30y" end="_Middle+40x+14y" edge="Start" />
+    </group>
+		
+  </connections>
+  <render>
+		
+    <group>
+      <!-- construction lines -->
+      <!--
+      <line start="_Middle-20y" end="_Middle+20y" />
+      <line start="_Middle-40x" end="_Middle+40x" />
+      -->         
+          
+      <!-- Diode part -->     
+      <line start="_Middle-40x-30y" end="_Middle-40x-8y" />
+      <line start="_Middle-40x+18y" end="_Middle-40x+30y" />
+      <path start="_Middle-40x-5y" data="l 10,0 l -10,17 l -10,-17 l 10,0" />      
+      <line start="_Middle-50x+15y" end="_Middle-30x+15y" />     
+      <path start="_Middle-26x+10y" data="l 10,-10 l -1,6 l -5,-5 l 6,-1" fill="true" />
+      <path start="_Middle-16x+10y" data="l 10,-10 l -1,6 l -5,-5 l 6,-1" fill="true" />
+
+      <!-- Transitor part -->
+      <line start="_Middle+40x-30y" end="_Middle+40x-13y" />
+      <line start="_Middle+40x+13y" end="_Middle+40x+30y" />
+      <line start="_Middle+25.5x-8y" end="_Middle+25.5x+8y" thickness="3" />
+      <line start="_Middle+40x-13y" end="_Middle+25.5x-4y" />
+      <line start="_Middle+25.5x+4y" end="_Middle+40x+13y" />
+      <ellipse centre="_Middle+30x" rx="16" ry="16" />          
+      <path start="_Middle+32x+7y" data="l 4,-2 l 1,7 l -6,-4 l 2,-1" fill="true" />
+          
+      <text value="OPB704" x="_Middle-25" y="_Middle-28" size="large" />
+    </group>
+		
+  </render>
+</component>
