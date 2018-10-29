@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component version="1.2" xmlns="http://schemas.circuit-diagram.org/circuitDiagramDocument/2012/component/xml">
+  <declaration>
+		
+    <!-- Describe the component -->
+    <meta name="name" value="servo" />
+    <meta name="version" value="1.0" />
+    <meta name="minsize" value="52" />
+    <meta name="author" value="phopley" />
+    <meta name="additionalinformation" value="[details here]" />
+    <meta name="guid" value="fe22fcbc-f27f-4640-b16d-f55e2b3e45fd" />
+
+    <!-- Can only be displayed horizontally -->
+    <flags>
+      <option>horizontalonly</option>
+    </flags>
+		
+  </declaration>
+  <connections>
+		
+    <!-- Specify where other components can be connected to -->
+		
+    <group>
+      <connection name="signal" start="_Middle-39x-10y" end="_Middle-31x-10y" edge="start" />
+      <connection name="power" start="_Middle-39x" end="_Middle-33x" edge="start" />
+      <connection name="ground" start="_Middle-39x+10y" end="_Middle-31x+10y" edge="start" />
+    </group>	
+	
+  </connections>
+  <render>
+    
+    <!-- Draw the component -->
+		
+    <group>
+      <line start="_Middle-39x-10y" end="_Middle-30x-10y" />
+      <line start="_Middle-39x" end="_Middle-32x" />
+      <line start="_Middle-39x+10y" end="_Middle-30x+10y" />            
+      
+      <ellipse centre="_Middle" rx="30" ry="30" />
+       
+      <text value="Servo" x="_Middle" y="_Middle-5y"  align="CentreCentre" />
+      <text value="Motor" x="_Middle" y="_Middle+5y"  align="CentreCentre" />
+			
+      <text value="W" x="_Middle-20x" y="_Middle-10y"  align="CentreCentre" />
+      <text value="R" x="_Middle-20x" y="_Middle"  align="CentreCentre" />
+      <text value="B" x="_Middle-20x" y="_Middle+10y"  align="CentreCentre" />
+    </group>
+		
+  </render>
+</component>
