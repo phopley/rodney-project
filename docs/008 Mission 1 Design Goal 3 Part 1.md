@@ -1319,3 +1319,75 @@ int main(int argc, char **argv)
 }
 ```
 ## Using the code
+To test the code we have developed so far I'm going to run some tests on the actual robot hardware but we can also run some tests on the Gazebo robot simulator tool running on a Linux PC. In the folder *rodney/urdf* there is a file called *rodney.urdf* which models the Rodney Robot. How to write a URDF (Unified Robot Description Format) model would require many articles itself but as always there is information on the ROS Wiki website about [URDF](http://wiki.ros.org/urdf "URDF"). My model is nowhere near perfect and needs some work but we can use it here to test the robot locomotion. All the files to do this are included in the *rodney* folder and the *rodney_sim_control* folder. 
+
+The package versions used in this test were:
+* rodney ???
+* joystick ???
+* rodney_sim_control ???
+
+### Building the ROS packages on the workstation
+On the workstation as well as running the simulation we also want to run the keyboard and joystick nodes so that we can control the actual robot hardware remotely.
+
+Create a workspace with the following commands:
+```
+$ mkdir -p ~/test_ws/src 
+$ cd ~/test_ws/ 
+$ catkin_make
+```
+Copy the packages *rodney*, *joystick*, *rodney_sim_control* and *ros-keyboard* (from https://github.com/lrse/ros-keyboard) into the ~/test_ws/src folder and then build the code with the following commands:
+```
+$ cd ~/test_ws/ 
+$ catkin_make
+```
+Check that the build completes without any errors.
+### Running the simulation
+In the *rodney_sim_control* package there is a launch file that will load the robot model into the parameter server, launch Gazebo and spawn a simulation of the robot. Launch this file with the following commands:
+```
+$ cd ~/test_ws/
+$ source devel/setup.bash
+$ roslaunch rodney_sim_control rodney_sim_control.launch
+```
+After a short time you should see the model of Rodney in an empty world. The simulation is currently paused.
+<img src="https://github.com/phopley/rodney-project/blob/master/docs/images/Opti-gazebo01_2wd.png" title="Gazebo">
+
+In a new terminal load the rodney config file and run the rodney node with the following commands:
+```
+$ cd ~/test_ws/ 
+$ source devel/setup.bash 
+$ rosparam load src/rodney/config/config.yaml
+$ rosrun rodney rodney_node
+```
+An info message should be seen reported that the node is running.
+
+The first test is going to test that a message on the *demand_vel* topic, as if from the autonomous subsystem, will control the robot's movements.
+
+In Gazebo click the play button, bottom left of the main screen, to start the simulation. In a new terminal type the following to send a message on the *demand_vel* topic.
+```
+$ rostopic pub -1 /demand_vel  geometry_msgs/Twist '{linear: {x: 0.5}}'
+```
+The simulated robot will move forward at a velocity of 0.5 metres/second. Reverse the direction with the following command:
+```
+$ rostopic pub -1 /demand_vel geometry_msgs/Twist '{linear: {x: -0.5}}'
+```
+You can stop the robot movement with the following command:
+```
+$ rostopic pub -1 /demand_vel geometry_msgs/Twist '{linear: {x: 0.0}}'
+```
+Next make the simulated robot turn on the spot with the following command:
+```
+$ rostopic pub -1 /demand_vel geometry_msgs/Twist '{angular: {z: 1.0}}'
+```
+Repeating the command with a negative value will cause the robot to rotate clockwise and then stop the movement with a value of zero.
+
+Next we will test the movement with the keyboard functionality.
+```
+$ cd ~/test_ws/ 
+$ source devel/setup.bash
+$ rosrun keyboard keyboard
+```
+A small window whose title is "ROS keyboard input" should be running. Make sure this window has the focus and then press 'm' key to put the robot in manual locomotion mode.
+
+Ensure "num lock" is not selected.
+
+You can now use the keyboards numeric keypad to drive the robot around the simulated world. The following keys can be used to move the robot.
