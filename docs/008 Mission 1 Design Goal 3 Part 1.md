@@ -875,3 +875,447 @@ void RodneyNode::keyboardCallBack(const keyboard::Key::ConstPtr& msg)
     } 
 }
 ```
+The __batteryCallback__ function is called when a messaged is received on the *main_battery_status* topic. This topic is of message type [sensor_msgs/BatteryState](http://docs.ros.org/melodic/api/sensor_msgs/html/msg/BatteryState.html "BatteryState") which contains numerous battery information. For now we are just interested in the battery voltage level.
+
+The callback will publish a message which contains an indication of a good or bad level along with the battery voltage level. This is published on the */robot_face/expected_input* topic so will be displayed below the robot's animated face.
+
+The level at which the battery is considered low is configurable by using the parameter server. If the voltage is below this value, as well as the warning below the animated face a request will be sent every 5 minutes requesting that the robot speaks a low battery warning. This request will be sent to the *rodney_mission_node* with an ID of "J2". The first parameter is the text to speak and the second parameter is the text that the animated face should use for its display. This includes the ":(" smiley so that the robot face looks sad.
+``` C++
+// Callback for main battery status
+void RodneyNode::batteryCallback(const sensor_msgs::BatteryState::ConstPtr& msg)
+{ 
+    // Convert float to string with two decimal places
+    std::stringstream ss;
+    ss << std::fixed << std::setprecision(2) << msg->voltage;
+    std::string voltage = ss.str();
+    
+    std_msgs::String status_msg;
+    
+    // Publish battery voltage to the robot face
+    // However the '.' will be used by the face to change the expression to neutral so we will replace with ','
+    replace(voltage.begin(), voltage.end(), '.', ',');
+    
+    if(msg->voltage > voltage_level_warning_)
+    {
+        status_msg.data = "Battery level OK ";
+        battery_low_count_ = 0;
+    }
+    else
+    {
+        // If the battery level goes low we wait a number of messages to confirm it was not a dip as the motors started
+        if(battery_low_count_ > 1)
+        {
+        
+            status_msg.data = "Battery level LOW ";
+        
+            // Speak warning every 5 minutes        
+            if((ros::Time::now() - last_battery_warn_).toSec() > (5.0*60.0))
+            {
+                last_battery_warn_ = ros::Time::now();
+            
+                std_msgs::String mission_msg;
+                mission_msg.data = "J2^battery level low^Battery level low:(";
+                mission_pub_.publish(mission_msg);
+            }
+        }
+        else
+        {
+            battery_low_count_++;
+        }
+    }
+    
+    status_msg.data += voltage + "V";                                 
+    face_status_pub_.publish(status_msg);
+}
+```
+The __completeCallBack__ function is called when a messaged is received on the */missions/mission_complete* topic. An indication that the robot is no longer running a mission is set by setting __missions_running___ to false.
+``` C++
+void RodneyNode::completeCallBack(const std_msgs::String::ConstPtr& msg)
+{
+    mission_running_ = false;
+    
+    last_interaction_time_ = ros::Time::now();
+}
+```
+The __motorDemandCallBack__ function is called when a message is received on the *demand_vel* topic.
+
+The robot movements will be either manual or autonomous, this node is responsible for using either the demands created from the keyboard or joystick in manual mode, or from the autonomous subsystem. This callback simply stores the linear and angular demands from the autonomous subsystem.
+``` C++
+// Callback for when motor demands received in autonomous mode
+void RodneyNode::motorDemandCallBack(const geometry_msgs::Twist::ConstPtr& msg)
+{ 
+    linear_mission_demand_ = msg->linear.x;
+    angular_mission_demand_ = msg->angular.z;
+}
+```
+The __sendTwist__ function is one of those called from main in our loop. It decides which input should be used for requesting the actual electric motor demands, either joystick, keyboard or the autonomous subsystem. The chosen demands are published in a message on the *cmd_vel* topic. Notice that a demand is always published as its normal practice for the system to keep up a constant rate of demands. If the demands are not sent then the part of the system controlling the motors can shut them down as a safety precaution. 
+
+The message is of type [geometry_msgs/Twist](http://docs.ros.org/melodic/api/geometry_msgs/html/msg/Twist.html "geometry_msgs/Twist") and contains two vectors, one for linear velocity (meters/second) and one for angular velocity (radians/second). Each vector gives the velocities in three dimensions, now for linear we will only use the x direction and for angular only the velocity around the z direction. This may seem like overkill but it does mean that we can make use of existing path planning and obstacle avoidance software later in the project. Publishing this topic also means that we can simulate our robot movements in [Gazebo](http://wiki.ros.org/gazebo "Gazebo"). Gazebo is a robot simulation tool which we will use later in this part of the article to test some of our code.
+
+To ramp the velocities to the target demands the callback function make use of two helper functions __rampedTwist__ and __rampedVel__. We use these to ramp to the target velocities in order to stop skidding and shuddering which may occur if we attempted to move the robot in one big step change in velocity. The code in these two helper functions is based on Python code from the O'Reilly book "Programming Robots with ROS".
+``` C++
+void RodneyNode::sendTwist(void)
+{
+    geometry_msgs::Twist target_twist;
+    
+    // If in manual locomotion mode use keyboard or joystick data
+    if(manual_locomotion_mode_ == true)
+    {
+        // Publish message based on keyboard or joystick speeds
+        if((keyboard_linear_speed_ == 0) && (keyboard_angular_speed_ == 0))
+        {
+            // Use joystick values
+            target_twist.linear.x = joystick_linear_speed_;
+            target_twist.angular.z = joystick_angular_speed_;            
+        }
+        else
+        {
+            // use keyboard values
+            target_twist.linear.x = keyboard_linear_speed_;
+            target_twist.angular.z = keyboard_angular_speed_;                   
+        }
+    }
+    else
+    {
+        // Use mission demands (autonomous)
+        target_twist.linear.x = linear_mission_demand_;
+        target_twist.angular.z = angular_mission_demand_;
+    }
+    
+    ros::Time time_now = ros::Time::now();
+        
+    // Ramp towards are required twist velocities
+    last_twist_ = rampedTwist(last_twist_, target_twist, last_twist_send_time_, time_now);
+        
+    last_twist_send_time_ = time_now;
+        
+    // Publish the Twist message
+    twist_pub_.publish(last_twist_);
+}
+//---------------------------------------------------------------------------
+
+geometry_msgs::Twist RodneyNode::rampedTwist(geometry_msgs::Twist prev, geometry_msgs::Twist target,
+                                             ros::Time time_prev, ros::Time time_now)
+{
+    // Ramp the angular and linear values towards the tartget values
+    geometry_msgs::Twist retVal;
+    
+    retVal.angular.z = rampedVel(prev.angular.z, target.angular.z, time_prev, time_now, ramp_for_angular_);
+    retVal.linear.x = rampedVel(prev.linear.x, target.linear.x, time_prev, time_now, ramp_for_linear_);
+    
+    return retVal;
+}
+//---------------------------------------------------------------------------
+
+float RodneyNode::rampedVel(float velocity_prev, float velocity_target, ros::Time time_prev, ros::Time time_now,
+                            float ramp_rate)
+{
+    // Either move towards the velocity target or if difference is small jump to it
+    float retVal;    
+    float sign;
+    float step = ramp_rate * (time_now - time_prev).toSec();
+    
+    if(velocity_target > velocity_prev)
+    {
+        sign = 1.0f;
+    }
+    else
+    {
+        sign = -1.0f;
+    }
+    
+    float error = std::abs(velocity_target - velocity_prev);
+    
+    if(error < step)
+    {
+        // Can get to target in this within this time step
+        retVal = velocity_target;
+    }
+    else
+    {
+        // Move towards our target
+        retVal = velocity_prev + (sign * step);
+    }        
+    
+    return retVal;
+}
+```
+The last function __checkTimers__ is the other function called from main in our loop. Now the functionality here serves two purposes. The first is if the robot is inactive, that is that it has not been manually controlled or it finished the last mission more than 15 minutes ago, it will play a pre-existing wav file to remind you that it is still powered up. This functionality can be disabled by use of the */sounds/enabled* parameter in the parameter server.
+
+Oh and the second purpose of the functionality I'm afraid is an indication of my sense of humour, all my pre-existing wav files are recordings of Sci-Fi robots. I figured if a robot got bored it may amuse its self by doing robot impressions! "Danger Will Robinson, danger". Anyway if you don't like this idea you can disable the functionality or just play something else to show it is still powered up and inactive.
+
+There are a number of wav file names and text sentences to go with the wav files loaded into the parameter server. When it is time to play a wav file a random number is generated to select which wav file to play. The request is then sent using the ID "J1".
+``` C++
+void RodneyNode::checkTimers(void)
+{
+    /* Check time since last interaction */
+    if((wav_play_enabled_ == true) && (mission_running_ == false) && ((ros::Time::now() - last_interaction_time_).toSec() > (15.0*60.0)))
+    {
+        last_interaction_time_ = ros::Time::now();
+        
+        // Use a random number to pick the wav file
+        int random = (rand()%wav_file_names_.size())+1;                
+         
+        // This is a simple job not a mission
+        std_msgs::String mission_msg;
+        std::string path = ros::package::getPath("rodney");
+        mission_msg.data = "J1^" + path + "/sounds/" + wav_file_names_[std::to_string(random)] + 
+                           "^" + wav_file_texts_[std::to_string(random)];        
+        mission_pub_.publish(mission_msg);         
+    }    
+}
+```
+### Changes to head_control node
+Earlier in these articles we wrote the head_control package to synchronise the head movement and facial recognition functionality. In this article we want to be able to control the head manually as well. We therefore need to make some modifications to the *head_control_node.cp* file.
+
+In the __HeadControlNode__ constructor add code to subscribe to the */head_control_node/manual* topic.
+``` C++
+// Subscribe to topic for manual head movement command
+manual_sub_ = nh_.subscribe("/head_control_node/manual", 5,&HeadControlNode::manualMovementCallback, this);
+```
+Also add the following line to the end of the constructor.
+``` C++
+target_pan_tilt_ = current_pan_tilt_;
+```
+Add code for the __manualMovementCallback__ function which is called when a message is received on the */head_control_node/manual* topic. This function processes the request to move the head/camera up, down, left, right or to the default position.
+``` C++
+// This callback is used to process a command to manually move the head/camera
+void HeadControlNode::manualMovementCallback(const std_msgs::String& msg)
+{   
+    if(msg.data.find('u') != std::string::npos)
+    {
+        target_pan_tilt_.tilt = current_pan_tilt_.tilt + tilt_view_step_;        
+		
+	    if(target_pan_tilt_.tilt > tilt_max_)
+	    {          
+	        // Moved out of range, put back on max                   
+	        target_pan_tilt_.tilt = tilt_max_;
+        }
+    }
+    
+    if(msg.data.find('d') != std::string::npos)
+    {
+        target_pan_tilt_.tilt = current_pan_tilt_.tilt - tilt_view_step_;
+        
+        if(target_pan_tilt_.tilt < tilt_min_)
+	    {          
+	        // Moved out of range, put back on min                   
+	        target_pan_tilt_.tilt = tilt_min_;
+        }
+    }
+    
+    if(msg.data.find('l') != std::string::npos)
+    {
+        target_pan_tilt_.pan = current_pan_tilt_.pan + pan_view_step_;
+        
+        if(target_pan_tilt_.pan > pan_max_)
+	    {          
+	        // Moved out of range, put back on max                   
+	        target_pan_tilt_.pan = pan_max_;
+        }
+    }
+    
+    if(msg.data.find('r') != std::string::npos)
+    {
+        target_pan_tilt_.pan = current_pan_tilt_.pan - pan_view_step_;
+
+        if(target_pan_tilt_.pan < pan_min_)
+	    {          
+	        // Moved out of range, put back on min                   
+	        target_pan_tilt_.pan = pan_min_;
+        }
+    }
+    
+    if(msg.data.find('c') != std::string::npos)
+    {
+        // Move to default central position
+        target_pan_tilt_ = default_position_;
+    }
+    
+    // Assume if message received we will be moving the head/camera
+    move_head_ = true;
+    process_when_moved_ = nothing;        
+}
+```
+### Joystick node
+Now throughout this article we have added functionality for the robot to be moved manually by using a joystick/game pad controller. There is a joystick node available on the ROS Wiki website called [joy](http://wiki.ros.org/joy "joy").
+
+However I tried this package on two different Linux PCs and found that I kept getting segmentation faults. Instead of doing any deep investigation to see what the problem was I wrote my own simple joystick node. It's simpler than the one on the ROS website as I don't bother with worrying about sticky buttons etc.
+
+I would suggest that you try and use the package from the ROS website but if you have similar problems then you can use my ROS package which is available in the *joystick folder*. I have used it successfully with a Microsoft Xbox 360 Wired Controller and the *joystick_node.cpp* file is reproduced below.
+``` C++
+// Joystick Node. Takes input from a joystick/game pad and outputs current state in a sensor_msgs/joy topic.
+// See https://www.kernel.org/doc/Documentation/input/joystick-api.txt
+#include <joystick/joystick_node.h>
+
+#include <fcntl.h>
+#include <stdio.h>
+#include <linux/joystick.h>
+
+// Constructor 
+Joystick::Joystick(ros::NodeHandle n, std::string device)
+{
+    nh_ = n;
+    
+    // Advertise the topics we publish
+    joy_status_pub_ = nh_.advertise<sensor_msgs::Joy>("joy", 5);
+        
+    js_ = open(device.c_str(), O_RDONLY);
+    
+    if (js_ == -1)
+    {
+        ROS_ERROR("Problem opening joystick device");
+    }
+    else
+    {
+        int buttons = getButtonCount();
+        int axes = getAxisCount();
+
+        joyMsgs_.buttons.resize(buttons);
+        joyMsgs_.axes.resize(axes);
+        
+        ROS_INFO("Joystick number of buttons %d, number of axis %d", buttons, axes);
+    }
+}
+
+// Process the joystick input
+void Joystick::process(void)
+{
+    js_event event;
+        
+    FD_ZERO(&set_);
+    FD_SET(js_, &set_);
+    
+    tv_.tv_sec = 0;
+    tv_.tv_usec = 250000;
+    
+    int selectResult = select(js_+1, &set_, NULL, NULL, &tv_);
+    
+    if(selectResult == -1)
+    {
+        ROS_ERROR("Error with select joystick call"); // Error
+    }
+    else if (selectResult)
+    {
+        // Data available
+        if(read(js_, &event, sizeof(js_event)) == -1 && errno != EAGAIN)
+        {
+            // Joystick probably closed
+            ;
+        }
+        else
+        {
+            switch (event.type)
+            {
+                case JS_EVENT_BUTTON:
+                case JS_EVENT_BUTTON | JS_EVENT_INIT:
+                    // Set the button value                    
+                    joyMsgs_.buttons[event.number] = (event.value ? 1 : 0);
+                    
+                    time_last_msg_ = ros::Time::now();
+                    
+                    joyMsgs_.header.stamp = time_last_msg_;
+                    
+                    // We publish a button press right away so they are not missied
+                    joy_status_pub_.publish(joyMsgs_);
+                    break;
+                    
+                case JS_EVENT_AXIS:
+                case JS_EVENT_AXIS | JS_EVENT_INIT:
+                    // Set the axis value 
+                    joyMsgs_.axes[event.number] = event.value;
+                    
+                    // Only publish if time since last regular message as expired
+                    if((ros::Time::now() - time_last_msg_).toSec() > 0.1f)                    
+                    {
+                        time_last_msg_ = ros::Time::now();
+                    
+                        joyMsgs_.header.stamp = time_last_msg_;
+                        
+                        // Time to publish
+                        joy_status_pub_.publish(joyMsgs_);                 
+                    }
+
+                default:                    
+                    break;            
+            }
+        }  
+    }
+    else
+    {
+        // No data available, select time expired.
+        // Publish message to keep anything alive that needs it
+        
+        time_last_msg_ = ros::Time::now();
+        
+        joyMsgs_.header.stamp = time_last_msg_;
+        
+        // Publish the message
+        joy_status_pub_.publish(joyMsgs_);
+    }
+}
+
+// Returns the number of buttons on the controller or 0 if there is an error.
+int Joystick::getButtonCount(void)
+{
+    int buttons;
+    
+    if (ioctl(js_, JSIOCGBUTTONS, &buttons) == -1)
+    {
+        buttons = 0;
+    }
+
+    return buttons;
+}
+
+// Returns the number of axes on the controller or 0 if there is an error.
+int Joystick::getAxisCount(void)
+{
+    int axes;
+
+    if (ioctl(js_, JSIOCGAXES, &axes) == -1)
+    {
+        axes = 0;
+    }
+
+    return axes;
+}
+
+int main(int argc, char **argv)
+{
+    std::string device;
+    
+    ros::init(argc, argv, "joystick_node");
+
+    // ros::init() parses argc and argv looking for the := operator.
+    // It then modifies the argc and argv leaving any unrecognized command-line parameters for our code to parse.
+    // Use command line parameter to set the device name of the joystick or use a default.        
+    if (argc > 1)
+    {
+        device = argv[1];
+    }
+    else
+    {
+        device = "/dev/input/js0";
+    }
+    
+    ros::NodeHandle n;    
+    Joystick joystick_node(n, device);   
+    std::string node_name = ros::this_node::getName();
+	ROS_INFO("%s started", node_name.c_str());	
+	
+	// We are not going to use ros::Rate here, the class will use select and 
+	// return when it's time to spin and send any messages on the topic
+    
+    while(ros::ok())
+    {
+        // Check the joystick for an input and process the data
+        joystick_node.process();
+        
+        ros::spinOnce();
+    }
+    
+    return 0;    
+}
+```
+## Using the code
