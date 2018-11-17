@@ -1322,9 +1322,16 @@ int main(int argc, char **argv)
 To test the code we have developed so far I'm going to run some tests on the actual robot hardware but we can also run some tests on the Gazebo robot simulator tool running on a Linux PC. In the folder *rodney/urdf* there is a file called *rodney.urdf* which models the Rodney Robot. How to write a URDF (Unified Robot Description Format) model would require many articles itself but as always there is information on the ROS Wiki website about [URDF](http://wiki.ros.org/urdf "URDF"). My model is nowhere near perfect and needs some work but we can use it here to test the robot locomotion. All the files to do this are included in the *rodney* folder and the *rodney_sim_control* folder. 
 
 The package versions used in this test were:
-* rodney ???
 * joystick ???
 * rodney_sim_control ???
+* face_recognition ??? 
+* face_recognition_msgs ???
+* head_control ??? 
+* pan_tilt ???
+* rondey ???
+* rodney_missions ???
+* servo_msgs ???
+* speech ???
 
 ### Building the ROS packages on the workstation
 On the workstation as well as running the simulation we also want to run the keyboard and joystick nodes so that we can control the actual robot hardware remotely.
@@ -1349,6 +1356,7 @@ $ source devel/setup.bash
 $ roslaunch rodney_sim_control rodney_sim_control.launch
 ```
 After a short time you should see the model of Rodney in an empty world. The simulation is currently paused.
+
 <img src="https://github.com/phopley/rodney-project/blob/master/docs/images/Opti-gazebo01_2wd.png" title="Gazebo">
 
 In a new terminal load the rodney config file and run the rodney node with the following commands:
@@ -1391,3 +1399,118 @@ A small window whose title is "ROS keyboard input" should be running. Make sure 
 Ensure "num lock" is not selected.
 
 You can now use the keyboards numeric keypad to drive the robot around the simulated world. The following keys can be used to move the robot.
+* Key pad 8 - forward
+* Key pad 2 - reverse
+* Key pad 4 - rotate anti-clockwise
+* Key pad 6 - rotate clockwise
+* Key pad 7 - forward and left
+* Key pad 9 - forward and right
+* Key pad 1 - reverse and left
+* Key pad 3 - reverse and right
+* Key pad + increase the linear velocity
+* Key pad - decrease the linear velocity
+* Key pad * increase the angular velocity
+* Key pad / decrease the angular velocity
+
+The space bar will stop the robot
+
+Next we can test the movement with the joystick controller. Ensure the robot is stationary. In a new terminal issue the following commands.
+```
+$ cd ~/test_ws/
+$ source devel/setup.bash
+$ rosrun joystick joystick_node
+```
+A message showing the node has started should be displayed. With the configuration given in an unchanged *rodney/config/config.yaml* file and a wired Xbox 360 controller, you can control the simulated robot with the controls shown in the image below.
+
+<img src="https://github.com/phopley/rodney-project/blob/master/docs/images/Opti-controller1.png" title="Controller">
+
+From the Gazebo menu other objects can be inserted into the world. The video below shows the movement test running using Gazebo. Note that in the video Rodney is a 4 wheel drive robot, I have since updated the model and the actual robot has 2 wheel drive and casters. This will all be explained in the next article when we move the real robot hardware.
+
+???
+
+### Building the ROS packages on the Pi (Robot hardware)
+If not already done create a catkin workspace on the Raspberry Pi and initialise it with the following commands:
+```
+$ mkdir -p ~/rodney_ws/src
+$ cd ~/rodney_ws/
+$ catkin_make
+```
+Copy the packages *face_recognition*, *face_recognition_msgs*, *head_control*, *pan_tilt*, *rondey*, *rodney_missions*, *servo_msgs*, *speech* and *ros-keyboard* (from https://github.com/lrse/ros-keyboard) into the *~/rodney_ws/src* folder.
+
+Unless you want to connect the joystick controller directly to the robot you don't need to build the joystick package on the robot hardware. You do however need to build the keyboard package as it includes a message unique to that package. I'm going to using the Linux PC connected to the same network as the robot to control it remotely.
+
+Build the code with the following commands:
+```
+$ cd ~/rodney_ws/ 
+$ catkin_make
+```
+Check that the build completes without any errors.
+
+You will also need to compile and download the Arduino code to the Nano to control the servos.
+
+If not already done you will need to train the face recognition software, see [Design Goal 2 Part 1](https://github.com/phopley/rodney-project/blob/master/docs/005%20Mission%201%20Design%20Goal%201%20Part%202.md "Design Goal 2 Part 1")
+### Running the code on the robot
+Now we are ready to run our code. With the Arduino connected to a USB port use the launch file to start the nodes with the following commands. If no master node is running in a system the launch command will also launch the master node, roscore:
+```
+$ cd ~/rodney_ws/
+$ source devel/setup.bash
+$ roslaunch rodney rodney.launch
+```
+On the workstation run the following commands to start the keyboard node:
+```
+$ cd ~/test_ws 
+$ source devel/setup.bash 
+$ export ROS_MASTER_URI=http://ubiquityrobot:11311 
+$ rosrun keyboard keyboard
+```
+A small window whose title is "ROS keyboard input" should be running.
+
+The first test we will run on the robot hardware is "Mission 2". Make sure keyboard window has the focus and then press '2' key to start the mission.
+
+The robot should start moving the head/camera scanning the room for known faces. Once it has completed the scan within its head movement range it will either report that no one was recognised or a greeting to those it did recognise.
+
+The next test will check the ability to move the head/camera in manual mode using the keyboard. Make sure keyboard window has the focus and then press 'm' to put the system in manual mode. Used the cursor keys to move the head/camera. Press the 'd' key to return the head/camera to the default position.
+
+The next test will check the ability to move the head/camera in manual mode using the joystick controller. In a new terminal on the workstation type the following commands.
+```
+$ cd ~/test_ws 
+$ source devel/setup.bash 
+$ export ROS_MASTER_URI=http://ubiquityrobot:11311 
+$ rosrun joystick joystick_node
+```
+A message showing the node has started should be displayed. With the configuration given in an unchanged *rodney/config/config.yaml* file and a wired Xbox 360 controller you can control the robot head/camera movement with the controls shown in the image below.
+
+<img src="https://github.com/phopley/rodney-project/blob/master/docs/images/Opti-controller2.png" title="Controller">
+
+???
+
+For the next test we will test the status indication. In a terminal at the workstation type the following commands:
+```
+$ cd ~/test_ws 
+$ source devel/setup.bash 
+$ export ROS_MASTER_URI=http://ubiquityrobot:11311 
+$ rostopic pub -1 main_battery_status sensor_msgs/BatteryState '{voltage: 12}'
+```
+The status below the robot face should read "Battery level OK 12,00V".
+
+In the terminal issue the following command:
+```
+$ rostopic pub -1 main_battery_status sensor_msgs/BatteryState '{voltage: 9.4}'
+```
+The status below the robot face should read "9,40V".
+
+In the terminal issue the following command __twice__:
+```
+$ rostopic pub -1 main_battery_status sensor_msgs/BatteryState '{voltage: 9.4}'
+```
+The status below the robot face should read "Battery level low 9,40V", the robot should speak a low warning and the facial expression should be sad.
+
+Send the message again within 5 minutes of the last message. The warning should not be spoken.
+
+Wait for 5 minutes and send the message again. This time the spoken warning should be repeated.
+
+The next test will check the functionality for wav file playback. Wait for 15 minutes without issuing any commands from the keyboard and joystick. After the 15 minutes the robot should play a random wav file and animate the mouth along with the wav file.
+
+To aid debugging here is an output from rqt_graph of the current system.
+
+<img src="https://github.com/phopley/rodney-project/blob/master/docs/images/rosgraph.png" title="Graph">
