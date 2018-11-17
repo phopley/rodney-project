@@ -1322,16 +1322,16 @@ int main(int argc, char **argv)
 To test the code we have developed so far I'm going to run some tests on the actual robot hardware but we can also run some tests on the Gazebo robot simulator tool running on a Linux PC. In the folder *rodney/urdf* there is a file called *rodney.urdf* which models the Rodney Robot. How to write a URDF (Unified Robot Description Format) model would require many articles itself but as always there is information on the ROS Wiki website about [URDF](http://wiki.ros.org/urdf "URDF"). My model is nowhere near perfect and needs some work but we can use it here to test the robot locomotion. All the files to do this are included in the *rodney* folder and the *rodney_sim_control* folder. 
 
 The package versions used in this test were:
-* joystick ???
-* rodney_sim_control ???
-* face_recognition ??? 
-* face_recognition_msgs ???
-* head_control ??? 
-* pan_tilt ???
-* rondey ???
-* rodney_missions ???
-* servo_msgs ???
-* speech ???
+* [joystick V0.1.0](https://github.com/phopley/joystick/releases/tag/V0.1.0)
+* [rodney_sim_control V0.0.2](https://github.com/phopley/Robotics-test-code/releases/tag/V0.0.2)
+* [face_recognition V0.1.2](https://github.com/phopley/face_recognition/releases/tag/V0.1.2) 
+* [face_recognition_msgs V0.1.1](https://github.com/phopley/face_recognition_msgs/releases/tag/V0.1.1)
+* [head_control V0.1.2](https://github.com/phopley/head_control/releases/tag/V0.1.2)
+* [pan_tilt V0.1.5](https://github.com/phopley/pan_tilt/releases/tag/V0.1.5)
+* [rondey V0.1.1](https://github.com/phopley/rodney/releases/tag/V0.1.1)
+* [rodney_missions V0.1.0](https://github.com/phopley/rodney_missions/releases/tag/V0.1.0)
+* [servo_msgstag/V0.1.2](https://github.com/phopley/servo_msgs/releases/tag/V0.1.2)
+* [speech V0.1.1](https://github.com/phopley/speech/releases/tag/V0.1.1)
 
 ### Building the ROS packages on the workstation
 On the workstation as well as running the simulation we also want to run the keyboard and joystick nodes so that we can control the actual robot hardware remotely.
@@ -1426,7 +1426,7 @@ A message showing the node has started should be displayed. With the configurati
 
 From the Gazebo menu other objects can be inserted into the world. The video below shows the movement test running using Gazebo. Note that in the video Rodney is a 4 wheel drive robot, I have since updated the model and the actual robot has 2 wheel drive and casters. This will all be explained in the next article when we move the real robot hardware.
 
-???
+[![YouTube](http://img.youtube.com/vi/Q23LoCGYPsI/0.jpg)](http://www.youtube.com/watch?v=Q23LoCGYPsI "Rodney robot movement simulation")
 
 ### Building the ROS packages on the Pi (Robot hardware)
 If not already done create a catkin workspace on the Raspberry Pi and initialise it with the following commands:
@@ -1482,7 +1482,7 @@ A message showing the node has started should be displayed. With the configurati
 
 <img src="https://github.com/phopley/rodney-project/blob/master/docs/images/Opti-controller2.png" title="Controller">
 
-???
+[![YouTube](http://img.youtube.com/vi/2KPQKTOI6T4/0.jpg)](http://www.youtube.com/watch?v=2KPQKTOI6T4 "Rodney running mission 2 and manual head control")
 
 For the next test we will test the status indication. In a terminal at the workstation type the following commands:
 ```
