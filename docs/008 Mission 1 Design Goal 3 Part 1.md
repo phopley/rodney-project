@@ -266,3 +266,612 @@ class Greeting(State):
         return 'success'
 ```
 ### Top level control
+The *rodney* node will be responsible for the top level control of the robot.
+
+Our ROS package for the node is called *rodney* and is available in the [rodney repository](https://github.com/phopley/rodney "rodney repository"). The package contains all the usual ROS files and folders plus a few extra.
+
+The *config* folder contains a *config.yaml* file which can be used to override some of the default configuration values. You can configure:
+
+* The game controller axis which is used for moving the robot forward and backward in manual locomotion mode
+* The game controller axis which is used for moving the robot clockwise and anti-clockwise in manual locomotion mode
+* The game controller axis which will be used for moving the head/camera up and down in manual locomotion mode
+* The game controller axis which will be used for moving the head/camera left and right in manual locomotion mode
+* The game controller button which will be used for selecting manual locomotion mode
+* The game controller button which will be used for moving the head/camera back to the default position
+* The game controller axes dead zone value
+* The linear velocity which is requested when the controller axis is at its maximum range
+* The angular velocity which is requested when the controller axis is at its maximum range
+* The ramp rate used to increase or decrease the linear velocity
+* The ramp rate used to increase or decrease the angular velocity
+* The battery voltage level that a low battery warning will be issued at
+* Enable/disable the wav file playback functionality when the robot is inactive
+* A list of wav filenames to play from when the robot is inactive
+* A list of speeches to use when playing the wav files names
+
+The *launch* folder contains two launch files, *rodney.launch* and *rviz.launch*. The *rodney.launch* file is used to load all the configuration files, covered in the first articles, into the parameter server and to start all the nodes that make up the robot project. It is similar to the launch files used so far in the project except it now includes the *rodney_node* and the *rodney_missions_node*. rviz is a 3D visualization tool for ROS which can be used to visualise data including the robot position and pose. Documentation for [rviz is available on the ROS Wiki website](http://wiki.ros.org/rviz "rviz"). The *rviz.launch* file along with the *meshes*, *rviz* and *urdf* folders can be used for visualising Rodney. We will use the urdf model of Rodney to do some testing on a simulated Rodney robot.
+
+The image below shows a visualisation of Rodney in rviz.
+<img src="https://github.com/phopley/rodney-project/blob/master/docs/images/Opti-rviz_2wd.png" title="rviz">
+
+The *rodney_control* folder is just a convenient place to store the Ardunio file that was discussed earlier in these articles.
+
+The *sounds* folder is used to hold any wav files that the system is required to play. How to play these files and at the same time animate the robot face was covered earlier in these articles.
+
+The *include/rodney* and *src* folders contain the C++ code for the package. For this package we have one C++ class, __RodneyNode__, and a __main__ routine contained within the *rodney_node.cpp* file.
+
+The __main__ routine informs ROS of our node, creates an instance of the node class and passes it the node handle.
+
+Again we are going to do some processing of our own in a loop so instead of passing control to ROS with a call to __ros::spin__ we are going to call __ros::spinOnce__ to handle the transmitting and receiving of the topics. The loop will be maintained at a rate of 20Hz, this is setup by the call to __ros::rate__ and the timing is maintained by the call to __r.sleep__ within the loop.  
+
+Our loop will continue while the call to __ros::ok__ returns true, it will return false when the node has finished shutting down e.g. when you press Ctrl-c on the keyboard.
+
+In the loop we will call __sendTwist__ and __checkTimers__ which are described later in the article.
+
+``` C++
+int main(int argc, char **argv)
+{   
+    ros::init(argc, argv, "rodney");
+    ros::NodeHandle n;    
+    RodneyNode rodney_node(n);   
+    std::string node_name = ros::this_node::getName();
+	ROS_INFO("%s started", node_name.c_str());
+	
+	ros::Rate r(20); // 20Hz	    
+    
+    while(ros::ok())
+    {
+        rodney_node.sendTwist();
+        rodney_node.checkTimers();
+        
+        ros::spinOnce();
+        r.sleep();
+    }
+    
+return 0;    
+}
+```
+The constructor for our class starts by setting default values for the class parameters. For each of the parameters which are configurable using the ROS parameter server, a call is made to either __param__ or __getParam__. The difference between these two calls is that with param the default value passed to the call is used if the parameter is not available in the parameter server.
+
+We next subscribe to the topics that the node is interested in.
+
+* *keyboard/keydown* to obtain key presses from a keyboard. These key presses are generated from a remote PC to control the robot in manual mode
+* *joy* to obtain joystick/game pad controller input, again to control the robot from a remote PC
+* *missions/mission_complete* so that the node is informed when the current robot mission is completed
+* *main_battery_status* this will be used later in the project to receive the state of the robots main battery
+* *demand_vel* this will be used later in the project to receive autonomous velocity demands
+
+Next in the constructor is the advertisement of the topics which this node will publish.
+
+* */robot_face/expected_input* this topic was discussed in part 3 of these articles and is used to display a status below the robot face. We will use it to show the status of the main battery
+* */missions/mission_request* this will be used to pass requested missions and jobs on to the state machine node 
+* */missions/mission_cancel* this can be used to cancel the current ongoing mission
+* */cmd_vel* this will be used later in the project to send velocity commands to the node responsible for driving the electric motors. The requested velocities will either be from the autonomous subsystem or as a result of keyboard/joystick requests when in manual mode
+
+Finally the constructor sets a random generator seed and obtains the current time. The use of the random number generator and the time is discussed in the section on the __checkTimers__ method.
+``` C++
+// Constructor 
+RodneyNode::RodneyNode(ros::NodeHandle n)
+{
+    nh_ = n;
+    
+    linear_mission_demand_ = 0.0f;
+    angular_mission_demand_ = 0.0f;
+    
+    manual_locomotion_mode_ = false;
+    linear_set_speed_ = 0.5f;
+    angular_set_speed_ = 1.0f;
+    
+    linear_speed_index_ = 0;
+    angular_speed_index_ = 1;
+    manual_mode_select_ = 0;
+    
+    camera_x_index_ = 2;
+    camera_y_index_ = 3;
+    default_camera_pos_select_ = 1;
+    
+    max_linear_speed_ = 3;
+    max_angular_speed_ = 3;
+    
+    dead_zone_ = 2000;
+    
+    ramp_for_linear_ = 5.0f;
+    ramp_for_angular_ = 5.0f;
+    
+    voltage_level_warning_ = 9.5f; 
+    
+    wav_play_enabled_ = false;  
+    
+    // Obtain any configuration values from the parameter server. If they don't exist use the defaults above
+    nh_.param("/controller/axes/linear_speed_index", linear_speed_index_, linear_speed_index_);
+    nh_.param("/controller/axes/angular_speed_index", angular_speed_index_, angular_speed_index_);
+    nh_.param("/controller/axes/camera_x_index", camera_x_index_, camera_x_index_);
+    nh_.param("/controller/axes/camera_y_index", camera_y_index_, camera_y_index_);
+    nh_.param("/controller/buttons/manual_mode_select", manual_mode_select_, manual_mode_select_);
+    nh_.param("/controller/buttons/default_camera_pos_select", default_camera_pos_select_, default_camera_pos_select_);
+    nh_.param("/controller/dead_zone", dead_zone_, dead_zone_);
+    nh_.param("/teleop/max_linear_speed", max_linear_speed_, max_linear_speed_);
+    nh_.param("/teleop/max_angular_speed", max_angular_speed_, max_angular_speed_);
+    nh_.param("/motor/ramp/linear", ramp_for_linear_, ramp_for_linear_);
+    nh_.param("/motor/ramp/angular", ramp_for_angular_, ramp_for_angular_);
+    nh_.param("/battery/warning_level", voltage_level_warning_, voltage_level_warning_);    
+    nh_.param("/sounds/enabled", wav_play_enabled_, wav_play_enabled_);
+    
+    // Obtain the filename and text for the wav files that can be played    
+    nh_.getParam("/sounds/filenames", wav_file_names_);
+    nh_.getParam("/sounds/text", wav_file_texts_);
+     
+    // Subscribe to receive keyboard input, joystick input, mission complete and battery state
+    key_sub_ = nh_.subscribe("keyboard/keydown", 5, &RodneyNode::keyboardCallBack, this);
+    joy_sub_ = nh_.subscribe("joy", 1, &RodneyNode::joystickCallback, this);
+    mission_sub_ = nh_.subscribe("/missions/mission_complete", 5, &RodneyNode::completeCallBack, this);
+    battery_status_sub_ = nh_.subscribe("main_battery_status", 1, &RodneyNode::batteryCallback, this);
+    
+    // The cmd_vel topic below is the command velocity message to the motor driver.
+    // This can be created from either keyboard or game pad input when in manual mode or from the thi subscribed
+    // topic when in autonomous mode.
+    demmand_sub_ = nh_.subscribe("demand_vel", 5, &RodneyNode::motorDemandCallBack, this);
+
+    // Advertise the topics we publish
+    face_status_pub_ = nh_.advertise<std_msgs::String>("/robot_face/expected_input", 5);
+    mission_pub_ = nh_.advertise<std_msgs::String>("/missions/mission_request", 10);
+    cancel_pub_ = nh_.advertise<std_msgs::Empty>("/missions/mission_cancel", 5);
+    twist_pub_ = nh_.advertise<geometry_msgs::Twist>("cmd_vel", 1);
+    
+    // Seed the random number generator
+    srand((unsigned)time(0));
+    
+    last_interaction_time_ = ros::Time::now();
+}
+```
+I'll now briefly describe the functions that make up the class.
+
+The __joystickCallback__ is called when a message is received on the *Joy* topic. The data from the joystick/game pad controller can we used to move the robot around and to move the head/camera when in manual mode.
+
+Data from the joystick is in two arrays, one contains the current position of each axes and the other the current state of the buttons. Which axis and which button are used is configurable by setting the index value in the parameter server.
+
+The function first reads the axes that control the angular and linear speed of the robot. These values are compared to a dead zone value which dictates how much the axes must be moved before the value is used to control the robot. The values from the controller are then converted to values that can be used for linear and velocity demands. This will mean that the maximum possible value received from the controller will result in a demand of the robots top speed. These values are stored and will be used in the __sendTwist__ method.
+
+Next the axes used for controlling the movement of the head/camera in manual mode are read, again a dead zone is applied to the value. If the robot is in manual locomotion mode the values are sent as a "J3" job to the *rondey_mission_node*. 
+
+Next the button values are checked. Again the index of the button used for each function can be configured. One button is used to put the robot in manual locomotion mode, which if a robot mission is currently running results in a request to cancel the mission. The second button is used as a quick way of returning the head/camera to the default position.
+``` C++
+void RodneyNode::joystickCallback(const sensor_msgs::Joy::ConstPtr& msg)
+{
+    float joystick_x_axes;
+    float joystick_y_axes;
+            
+    // manual locomotion mode can use the joystick/game pad
+    joystick_x_axes = msg->axes[angular_speed_index_];
+    joystick_y_axes = msg->axes[linear_speed_index_];
+        
+    // Check dead zone values   
+    if(abs(joystick_x_axes) < dead_zone_)
+    {
+        joystick_x_axes = 0;
+    }
+    
+    if(abs(joystick_y_axes) < dead_zone_)
+    {
+        joystick_y_axes = 0;
+    }    
+    
+    // Check for manual movement
+    if(joystick_y_axes != 0)
+    {      
+        joystick_linear_speed_ = -(joystick_y_axes*(max_linear_speed_/(float)MAX_AXES_VALUE_));
+        last_interaction_time_ = ros::Time::now();
+    }
+    else
+    {
+        joystick_linear_speed_ = 0;
+    }
+    
+    if(joystick_x_axes != 0)
+    {
+        joystick_angular_speed_ = -(joystick_x_axes*(max_angular_speed_/(float)MAX_AXES_VALUE_));
+        last_interaction_time_ = ros::Time::now();
+    }
+    else
+    {
+        joystick_angular_speed_ = 0;
+    }
+    
+    // Now check the joystick/game pad for manual camera movement               
+    joystick_x_axes = msg->axes[camera_x_index_];
+    joystick_y_axes = msg->axes[camera_y_index_];
+    
+    // Check dead zone values   
+    if(abs(joystick_x_axes) < dead_zone_)
+    {
+        joystick_x_axes = 0;
+    }
+    
+    if(abs(joystick_y_axes) < dead_zone_)
+    {
+        joystick_y_axes = 0;
+    }  
+    
+    if(manual_locomotion_mode_ == true)
+    {
+        if((joystick_x_axes != 0) || (joystick_y_axes != 0))
+        {
+            std_msgs::String mission_msg;   
+            mission_msg.data = "J3^";
+        
+            if(joystick_y_axes == 0)
+            {
+                mission_msg.data += "-^";
+            }
+            else if (joystick_y_axes > 0)
+            {
+                mission_msg.data += "u^";
+            }
+            else
+            {
+                mission_msg.data += "d^";        
+            }
+        
+            if(joystick_x_axes == 0)
+            {
+                mission_msg.data += "-";
+            }
+            else if (joystick_x_axes > 0)
+            {
+                mission_msg.data += "r";
+            }
+            else
+            {
+                mission_msg.data += "l";        
+            }
+        
+            mission_pub_.publish(mission_msg);
+            
+            last_interaction_time_ = ros::Time::now();
+        }
+    }
+    
+    // Button on controller selects manual locomotion mode
+    if(msg->buttons[manual_mode_select_] == 1)
+    {
+        if(mission_running_ == true)
+        {
+            // Cancel the ongoing mission
+            std_msgs::Empty empty_msg;
+            cancel_pub_.publish(empty_msg);                        
+        }
+        
+        // Reset speeds to zero           
+        keyboard_linear_speed_ = 0.0f; 
+        keyboard_angular_speed_ = 0.0f;
+        
+        manual_locomotion_mode_ = true;
+        
+        last_interaction_time_ = ros::Time::now(); 
+    }
+    
+    // Button on controller selects central camera position   
+    if((manual_locomotion_mode_ == true) && (msg->buttons[default_camera_pos_select_] == 1))
+    {            
+        std_msgs::String mission_msg;
+        mission_msg.data = "J3^c^-";
+        mission_pub_.publish(mission_msg);
+        
+        last_interaction_time_ = ros::Time::now();
+    }
+}
+```
+The __keyboardCallBack__ is called when a message is received on the *keyboard/keydown* topic. The key presses can be used to move the robot around and to move the head/camera when in manual mode.
+
+The data in the message is checked to see if it corresponds to a key that we are interested in.
+
+The number keys are used to select robot missions. Currently we are interested in mission 2, so if the '2' key is pressed the code publishes the request on the */missions/mission_request* topic with the "M2" ID.
+
+The 'C' key is used to request that the current mission be cancelled, this is done by sending a message on the */missions/mission_cancel* topic.
+
+The 'D' key is used to move the camera/head back to the default position if the robot is in manual locomotion mode.
+
+The 'M' key is used to put the robot in manual locomotion mode. If a mission is currently in progress a request to cancel the mission is also sent.
+
+The keyboard numeric keypad is used to control movement of the robot when in manual locomotion mode. For example key '1' will result in linear velocity in the reverse direction plus angular velocity in the ant-clockwise direction. The amount of velocity is set by the current values in __linear_set_speed___ and __angular_set_speed___ variables. The speed of the robot can be increased or decreased by the use of the '+', '-', '\*' and '/' keys on the numeric keypad. The '+' key will increase the robot linear velocity by 10% whilst the '-' key will decrease the linear velocity by 10%. The '\*' increases the angular velocity by 10% and the '/' key decreases the angular velocity by 10%.
+
+The space key will stop the robot moving.
+
+The concept of the linear and angular velocity will be discussed when the Twist message is described. But basically the robot does not contain steerable wheels so a change in direction will be achieved by requesting different speeds and or direction of the two motors. The amount of steering required will be set by the angular velocity.
+
+The up/down/left and right keys are used to move the head/camera when in manual mode.
+``` C++
+void RodneyNode::keyboardCallBack(const keyboard::Key::ConstPtr& msg)
+{
+    // Check for any keys we are interested in 
+    // Current keys are:
+    //      'Space' - Stop the robot from moving if in manual locomotion mode
+    //      'Key pad 1 and Num Lock off' - Move robot forwards and counter-clockwise if in manual locomotion mode
+    //      'Key pad 2 and Num Lock off' - Move robot backwards if in manual locomotion mode
+    //      'Key pad 3 and Num Lock off' - Move robot backwards and clockwise if in manual locomotion mode 
+    //      'Key pad 4 and Num Lock off' - Move robot counter-clockwise if in manual locomotion mode   
+    //      'Key pad 6 and Num Lock off' - Move robot clockwise if in manual locomotion mode
+    //      'Key pad 7 and Num Lock off' - Move robot forwards amd counter-clockwise if in manual locomotion mode    
+    //      'Key pad 8 and Num Lock off' - Move robot foward if in manual locomotion mode
+    //      'Key pad 9 and Num Lock off' - Move robot forwards amd clockwise if in manual locomotion mode
+    //      'Up key' - Move head/camera down in manual mode
+    //      'Down key' - Move head/camera up in manual mode
+    //      'Right key' - Move head/camera right in manual mode
+    //      'Left key' - Move head/camera left in manual mode 
+    //      'Key pad +' - Increase linear speed by 10% (speed when using keyboard for teleop)
+    //      'Key pad -' - Decrease linear speed by 10% (speed when using keyboard for teleop)
+    //      'Key pad *' - Increase angular speed by 10% (speed when using keyboard for teleop)
+    //      'Key pad /' - Decrease angular speed by 10% (speed when using keyboard for teleop)   
+    //      '2' - Run mission 2    
+    //      'c' or 'C' - Cancel current mission
+    //      'd' or 'D' - Move head/camera to the default position in manual mode 
+    //      'm' or 'M' - Set locomotion mode to manual        
+
+    // Check for key 2 with no modifiers apart from num lock is allowed
+    if((msg->code == keyboard::Key::KEY_2) && ((msg->modifiers & ~keyboard::Key::MODIFIER_NUM) == 0))
+    {
+        // '2', start a complete scan looking for faces (mission 2)
+        std_msgs::String mission_msg;
+        mission_msg.data = "M2";
+        mission_pub_.publish(mission_msg);
+                    
+        mission_running_ = true; 
+        manual_locomotion_mode_ = false;
+        
+        last_interaction_time_ = ros::Time::now();       
+    }
+    else if((msg->code == keyboard::Key::KEY_c) && ((msg->modifiers & ~RodneyNode::SHIFT_CAPS_NUM_LOCK_) == 0))
+    {          
+        // 'c' or 'C', cancel mission if one is running
+        if(mission_running_ == true)
+        {
+            std_msgs::Empty empty_msg;
+            cancel_pub_.publish(empty_msg);
+        }
+        
+        last_interaction_time_ = ros::Time::now();        
+    }
+    else if((msg->code == keyboard::Key::KEY_d) && ((msg->modifiers & ~RodneyNode::SHIFT_CAPS_NUM_LOCK_) == 0))
+    {          
+        // 'd' or 'D', Move camera to default position
+        if(manual_locomotion_mode_ == true)
+        {            
+            std_msgs::String mission_msg;
+            mission_msg.data = "J3^c^-";
+            mission_pub_.publish(mission_msg);
+        }    
+        
+        last_interaction_time_ = ros::Time::now();   
+    }       
+    else if((msg->code == keyboard::Key::KEY_m) && ((msg->modifiers & ~RodneyNode::SHIFT_CAPS_NUM_LOCK_) == 0))
+    {
+        // 'm' or 'M', set locomotion mode to manual (any missions going to auto should set manual_locomotion_mode_ to false)
+        // When in manual mode user can teleop Rodney with keyboard or joystick
+        if(mission_running_ == true)
+        {
+            // Cancel the ongoing mission
+            std_msgs::Empty empty_msg;
+            cancel_pub_.publish(empty_msg);                        
+        }
+        
+        // Reset speeds to zero           
+        keyboard_linear_speed_ = 0.0f; 
+        keyboard_angular_speed_ = 0.0f;
+        
+        manual_locomotion_mode_ = true;
+        
+        last_interaction_time_ = ros::Time::now();
+    }             
+    else if((msg->code == keyboard::Key::KEY_KP1) && ((msg->modifiers & keyboard::Key::MODIFIER_NUM) == 0))
+    {
+        // Key 1 on keypad without num lock
+        // If in manual locomotion mode this is an indication to move backwards and counter-clockwise by the current set speeds
+        if(manual_locomotion_mode_ == true)
+        {
+            keyboard_linear_speed_ = -linear_set_speed_;                        
+            keyboard_angular_speed_ = -angular_set_speed_;        
+        }
+        
+        last_interaction_time_ = ros::Time::now();
+    }
+    else if((msg->code == keyboard::Key::KEY_KP2) && ((msg->modifiers & keyboard::Key::MODIFIER_NUM) == 0))
+    {
+        // Key 2 on keypad without num lock
+        // If in manual locomotion mode this is an indication to move backwards by the current linear set speed
+        if(manual_locomotion_mode_ == true)
+        {
+            keyboard_linear_speed_ = -linear_set_speed_;        
+            keyboard_angular_speed_ = 0.0f;            
+        }
+        
+        last_interaction_time_ = ros::Time::now();
+    }  
+    else if((msg->code == keyboard::Key::KEY_KP3) && ((msg->modifiers & keyboard::Key::MODIFIER_NUM) == 0))
+    {
+        // Key 3 on keypad without num lock
+        // If in manual locomotion mode this is an indication to move backwards and clockwise by the current set speeds
+        if(manual_locomotion_mode_ == true)
+        {
+            keyboard_linear_speed_ = -linear_set_speed_;
+            keyboard_angular_speed_ = angular_set_speed_;                    
+        }
+        
+        last_interaction_time_ = ros::Time::now();
+    }
+    else if((msg->code == keyboard::Key::KEY_KP4) && ((msg->modifiers & keyboard::Key::MODIFIER_NUM) == 0))
+    {
+        // Key 4 on keypad without num lock
+        // If in manual locomotion mode this is an indication to turn counter-clockwise (spin on spot) by the current angular set speed
+        if(manual_locomotion_mode_ == true)
+        {
+            keyboard_linear_speed_ = 0.0f;
+            keyboard_angular_speed_ = angular_set_speed_;                    
+        }
+        
+        last_interaction_time_ = ros::Time::now();
+    } 
+    else if((msg->code == keyboard::Key::KEY_KP6) && ((msg->modifiers & keyboard::Key::MODIFIER_NUM) == 0))
+    {
+        // Key 6 on keypad without num lock
+        // If in manual locomotion mode this is an indication to turn clockwise (spin on spot) by the current angular set speed
+        if(manual_locomotion_mode_ == true)
+        {
+            keyboard_linear_speed_ = 0.0f;  
+            keyboard_angular_speed_ = -angular_set_speed_;                  
+        }
+        
+        last_interaction_time_ = ros::Time::now();
+    }
+    else if((msg->code == keyboard::Key::KEY_KP7) && ((msg->modifiers & keyboard::Key::MODIFIER_NUM) == 0))
+    {
+        // Key 7 on keypad without num lock
+        // If in manual locomotion mode this is an indication to move forwards and counter-clockwise by the current set speeds
+        if(manual_locomotion_mode_ == true)
+        {
+            keyboard_linear_speed_ = linear_set_speed_; 
+            keyboard_angular_speed_ = angular_set_speed_;                   
+        }
+        
+        last_interaction_time_ = ros::Time::now();
+    }    
+    else if((msg->code == keyboard::Key::KEY_KP8) && ((msg->modifiers & keyboard::Key::MODIFIER_NUM) == 0))
+    {
+        // Key 8 on keypad without num lock
+        // If in manual locomotion mode this is an indication to move forward by the current linear set speed
+        if(manual_locomotion_mode_ == true)
+        {
+            keyboard_linear_speed_ = linear_set_speed_; 
+            keyboard_angular_speed_ = 0.0f;                   
+        }
+        
+        last_interaction_time_ = ros::Time::now();
+    }
+    else if((msg->code == keyboard::Key::KEY_KP9) && ((msg->modifiers & keyboard::Key::MODIFIER_NUM) == 0))
+    {
+        // Key 9 on keypad without num lock
+        // If in manual locomotion mode this is an indication to move forwards and clockwise by the current set speeds
+        if(manual_locomotion_mode_ == true)
+        {
+            keyboard_linear_speed_ = linear_set_speed_; 
+            keyboard_angular_speed_ = -angular_set_speed_;                   
+        }
+        
+        last_interaction_time_ = ros::Time::now();
+    }
+    else if(msg->code == keyboard::Key::KEY_SPACE)
+    {
+        // Space key
+        // If in manual locomotion stop the robot movment 
+        if(manual_locomotion_mode_ == true)
+        {
+            keyboard_linear_speed_= 0.0f;     
+            keyboard_angular_speed_ = 0.0f;               
+        }
+        
+        last_interaction_time_ = ros::Time::now();
+    }
+    else if(msg->code == keyboard::Key::KEY_KP_PLUS)
+    {
+        // '+' key on num pad
+        // If in manual locomotion increase linear speed by 10%
+        if(manual_locomotion_mode_ == true)
+        {
+            linear_set_speed_ += ((10.0/100.0) * linear_set_speed_);
+            ROS_INFO("Linear Speed now %f", linear_set_speed_);
+        }  
+        
+        last_interaction_time_ = ros::Time::now();  
+    }
+    else if(msg->code == keyboard::Key::KEY_KP_MINUS)
+    {
+        // '-' key on num pad
+        // If in manual locomotion decrease linear speed by 10%
+        if(manual_locomotion_mode_ == true)
+        {
+            linear_set_speed_ -= ((10.0/100.0) * linear_set_speed_);
+            ROS_INFO("Linear Speed now %f", linear_set_speed_);
+        }  
+        
+        last_interaction_time_ = ros::Time::now();      
+    }
+    else if(msg->code == keyboard::Key::KEY_KP_MULTIPLY)
+    {
+        // '*' key on num pad
+        // If in manual locomotion increase angular speed by 10%
+        if(manual_locomotion_mode_ == true)
+        {
+            angular_set_speed_ += ((10.0/100.0) * angular_set_speed_);
+            ROS_INFO("Angular Speed now %f", angular_set_speed_);
+        }    
+        
+        last_interaction_time_ = ros::Time::now();
+    }
+    else if(msg->code == keyboard::Key::KEY_KP_DIVIDE)
+    {
+        // '/' key on num pad        
+        // If in manual locomotion decrease angular speed by 10%
+        if(manual_locomotion_mode_ == true)
+        {
+            angular_set_speed_ -= ((10.0/100.0) * angular_set_speed_);
+            ROS_INFO("Angular Speed now %f", angular_set_speed_);
+        }   
+        
+        last_interaction_time_ = ros::Time::now(); 
+    }    
+    else if(msg->code == keyboard::Key::KEY_UP)
+    {
+        // Up Key
+        // This is a simple job not a mission - move the head/camera down
+        if(manual_locomotion_mode_ == true)
+        {            
+            std_msgs::String mission_msg;
+            mission_msg.data = "J3^d^-";
+            mission_pub_.publish(mission_msg);
+        }
+        
+        last_interaction_time_ = ros::Time::now();
+    }
+    else if(msg->code == keyboard::Key::KEY_DOWN)
+    {
+        // Down Key
+        // This is a simple job not a mission - move the head/camera up
+        if(manual_locomotion_mode_ == true)
+        {
+            std_msgs::String mission_msg;
+            mission_msg.data = "J3^u^-";
+            mission_pub_.publish(mission_msg);
+        }
+        
+        last_interaction_time_ = ros::Time::now();
+    }  
+    else if(msg->code == keyboard::Key::KEY_LEFT)
+    {
+        // Left key
+        // This is a simple job not a mission - move the head/camera left
+        if(manual_locomotion_mode_ == true)
+        {
+            std_msgs::String mission_msg;
+            mission_msg.data = "J3^-^l";
+            mission_pub_.publish(mission_msg);
+        }
+        
+        last_interaction_time_ = ros::Time::now();
+    }       
+    else if(msg->code == keyboard::Key::KEY_RIGHT)
+    {
+        // Right Key
+        // This is a simple job not a mission - move the head/camera right
+        if(manual_locomotion_mode_ == true)
+        {
+            std_msgs::String mission_msg;
+            mission_msg.data = "J3^-^r";
+            mission_pub_.publish(mission_msg);
+        }
+        
+        last_interaction_time_ = ros::Time::now();
+    }                             
+    else
+    {
+        ;
+    } 
+}
+```
