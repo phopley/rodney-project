@@ -8,5 +8,5 @@
     - [Part 3 Head Control](https://github.com/phopley/rodney-project/blob/master/docs/006%20Mission%201%20Design%20Goal%201%20Part%203.md "Design goal 1 Part 3")
   - [Design Goal 2 Face & Voice](https://github.com/phopley/rodney-project/blob/master/docs/007%20Mission%201%20Design%20Goal%202.md "Design Goal 2")
   - Design Goal 3
-    - [Part 1 ???]
+    - [Part 1 Teleop & Simulation](https://github.com/phopley/rodney-project/blob/master/docs/008%20Mission%201%20Design%20Goal%203%20Part%201.md)
     - [Part 2 ???]
