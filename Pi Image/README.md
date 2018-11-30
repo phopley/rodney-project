@@ -218,3 +218,12 @@ $ rosdep install --from-paths src --ignore-src --rosdistro kinetic -y
 $ catkin_make
 ```
 ### 8. Swapfile
+As the project develops and increases in size a swapfile is required when building the project. Create a 1GB swapfile with the following command:
+```
+$ cd /
+$ sudo dd if=/dev/zero of=swapfile bs=1M count=1000
+$ sudo mkswap swapfile
+$ sudo swapon swapfile
+$ sudo nano etc/fstab
+```
+* Add "/swapfile none swap sw 0 0" to the end of the file , save and exit
