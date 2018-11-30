@@ -7,8 +7,10 @@ In the guide we will
 * [Configure and update the image](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#2-configure-and-update-the-image)
 * [Install TensorFlow](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#3-install-tensorflow)
 * [Bluetooth](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#4-bluetooth)
-* [System Configuration]
-* [ROS packages used by Rodney]
+* [System Configuration](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#5-system-configuration)
+* [Homer Robot Face]
+* [Voice Applications]
+* [ROS pakages used by Rodney]
 * [Swapfile]
 
 ## Steps
@@ -143,3 +145,55 @@ $ sudo apt install chromium-browser
 * System Tray
 * Indicator applets
 * Digital Clock
+### 5. Homer Robot Face
+The Homer Robot Face ROS package is used to display an animated robot face.
+- [ ] Install the homer_robot_face package
+```
+$ sudo apt-get install ros-kinetic-homer-robot-face
+```
+- [ ] There is a problem with a directory path. The code expects the OGRE to be in the directory `/usr/lib/x86_64-linux-gnu/OGRE-1.9.0.` but as you would expect on a Raspberry Pi it's in `/usr/lib/arm-linux-gnueabihf/OGRE-1.9.0.` We can solve this problem by creating a symbolic link
+```
+$ cd /usr/lib
+$ sudo mkdir -p x86_64-linux-gnu
+$ sudo ln -s /usr/lib/arm-linux-gnueabihf/OGRE-1.9.0 /usr/lib/x86_64-linux-gnu
+```
+- [ ] You can configer the face by editing the robot_homer_face config.cfg file
+```
+sudo nano /opt/ros/kinetic/share/homer_robot_face/config/config.cfg
+```
+* Mesh Filename : GiGo
+* Head Color : 1.0 1.0 1.0
+* Iris Color : 0.0 1.0 1.0
+* Outline Color : 0.0 0.0 0.0
+* Voice : male
+* Window Width : 400
+* Window Height : 450
+* Window Rotation : 0
+- [ ] To centre the face when running. Edit the lubuntu-rc.xml file and add the following application tag inside the applications tag
+```
+$ cd ~/
+$ nano .config/openbox/lubuntu-rc.xml
+```
+``` xml
+        <application name="RobotFace">
+            <position force="yes">
+                <x>200</x>
+                <y>0</y>
+            </position>
+        </application>
+</applications>
+</openbox_config>
+```
+### 6. Voice Applications
+The applications `pico2wav` and `Sox` are used by Rodney.
+- [ ]  Install pico2wav with the following command:
+```
+$ sudo apt-get install libttspico-utils
+```
+- [ ] Install Sox with the following command:
+```
+sudo apt-get install sox libsox-fmt-all
+```
+### 7. ROS pakages used by Rodney
+
+### 8. Swapfile
