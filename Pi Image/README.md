@@ -5,7 +5,11 @@ These steps will guide you through the process of installing and setting up the 
 In the guide we will
 * [Obtain and copy the Ubiquity Robotics Pi image](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#1-obtain-and-copy-the-ubiquity-robotics-pi-image)
 * [Configure and update the image](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#2-configure-and-update-the-image)
-* [Install TensorFlow]
+* [Install TensorFlow](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#3-install-tensorflow)
+* [Bluetooth]
+* [System Configuration]
+* [ROS packages used by Rodney]
+* [Swapfile]
 
 ## Steps
 ### 1. Obtain and copy the Ubiquity Robotics Pi image
@@ -109,3 +113,14 @@ $ cd ~/git/models/research/object_detection
 $ wget http://download.tensorflow.org/models/object_detection/ssdlite_mobilenet_v2_coco_2018_05_09.tar.gz
 $ tar -xzvf ssdlite_mobilenet_v2_coco_2018_05_09.tar.gz
 ```
+### 4. Bluetooth
+I sometime like to use a small Bluetooth keyboard with the robot but Bluetooth is not enabled correctly in this image.
+- [ ] Run the following commands to fix this:
+```
+$ sudo nano /boot/config.txt
+```
+* Add the following line between the lines "dtoverlay=pi3-miniuart-bt" and "dtoverlay=i2c-rtc,mcp7940x". 
+```
+core_freq=250
+```
+* Exit nano saving the file.
