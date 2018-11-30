@@ -126,5 +126,20 @@ core_freq=250
 * Exit nano saving the file.
 ### 5. System Configuration
 The following configures the lbunutu desktop and system for how I like it for a robot.
-- [ ] So that you only have to touch 'login' on the screen and not enter a password to login select "System Tools -> Users and Groups", change to Password "Not asked on login"
-- [ ] 
+- [ ] So that you only have to touch 'login' on the screen and not enter a password to login select from the menu "System Tools -> Users and Groups", change to Password "Not asked on login"
+- [ ] Although the image includes Firefox I like to install Chromium with:
+```
+$ sudo apt install chromium-browser
+```
+- [ ] I don't want the screen saver or power managment to kick in so from the menu "Preferences->Power Manager" select
+* System tab - When inactive for -> never
+* Display tab - Blank after -> never
+* Security tab - Automatically lock the session : Never
+- [ ] You may want to change the user password.
+- [ ] I like to set the following panel applets to my choice. Right click on bar and select "Add/Remove Panel Items" and select:
+* Menu
+* Directory Menu - "/home/ubuntu"
+* Application Launch and Task Bar (stretch) - Chromium Web Browser
+* System Tray
+* Indicator applets
+* Digital Clock
