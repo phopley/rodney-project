@@ -22,3 +22,10 @@ Here we will download and install the image.
 ```
 $ sudo systemctl disable magni-base
 ```
+- [ ] Run the following commands to get the latest updates.
+```
+$ sudo apt-get update
+$ sudo apt-get upgrade
+$ sudo apt-get dist-upgrade
+$ sudo reboot now
+```
