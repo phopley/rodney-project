@@ -8,10 +8,10 @@ In the guide we will
 * [Install TensorFlow](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#3-install-tensorflow)
 * [Bluetooth](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#4-bluetooth)
 * [System Configuration](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#5-system-configuration)
-* [Homer Robot Face]
-* [Voice Applications]
-* [ROS pakages used by Rodney]
-* [Swapfile]
+* [Homer Robot Face](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#5-homer-robot-face)
+* [Voice Applications](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#6-voice-applications)
+* [ROS pakages used by Rodney](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#7-ros-pakages-used-by-rodney)
+* [Swapfile](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#8-swapfile)
 
 ## Steps
 ### 1. Obtain and copy the Ubiquity Robotics Pi image
@@ -195,5 +195,26 @@ $ sudo apt-get install libttspico-utils
 sudo apt-get install sox libsox-fmt-all
 ```
 ### 7. ROS pakages used by Rodney
-
+The following packages ROS packages are also used by Rodney and can be download and installed/compiled.
+- [ ] I usually use the directory ~/rondey_ws for the ROS wokspace, add it to the bash file with the following
+```
+$ cd ~/
+$ nano .bashrc
+```
+* Add "source /home/ubuntu/rodney_ws/devel/setup.bash" to the end of the file, save and exit
+- [ ] Install the rosserial package so that the Arduino or Teensy can be used
+```
+$ sudo apt-get install ros-kinetic-rosserial
+```
+- [ ] Rodney use the ros-keyboard package for keyboard teleop. It requires SDL version 1.2. If you just try to install SDL you will get a later version and the package will not build. Use the following commands to download the package from https://github.com/lrse/ros-keyboard and use rosdep to ensure the correct dependencies are installed before building it with catkin_make.
+* Note - I have assumed the package was download to ~/git/ros-keyboard
+```
+$ mkdir -p ~/temp_ws/src
+$ cd ~/temp_ws
+$ catkin_make
+$ ln -s ~/git/ros-keyboard ~/temp_ws/src
+$ rosdep update
+$ rosdep install --from-paths src --ignore-src --rosdistro kinetic -y
+$ catkin_make
+```
 ### 8. Swapfile
