@@ -6,7 +6,7 @@ In the guide we will
 * [Obtain and copy the Ubiquity Robotics Pi image](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#1-obtain-and-copy-the-ubiquity-robotics-pi-image)
 * [Configure and update the image](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#2-configure-and-update-the-image)
 * [Install TensorFlow](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#3-install-tensorflow)
-* [Bluetooth]
+* [Bluetooth](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#4-bluetooth)
 * [System Configuration]
 * [ROS packages used by Rodney]
 * [Swapfile]
@@ -124,3 +124,7 @@ $ sudo nano /boot/config.txt
 core_freq=250
 ```
 * Exit nano saving the file.
+### 5. System Configuration
+The following configures the lbunutu desktop and system for how I like it for a robot.
+- [ ] So that you only have to touch 'login' on the screen and not enter a password to login select "System Tools -> Users and Groups", change to Password "Not asked on login"
+- [ ] 
