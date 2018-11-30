@@ -93,7 +93,10 @@ $ cd ~/git
 $ git clone --recurse-submodules https://github.com/tensorflow/models.git
 $ sudo nano ~/.bashrc
 ```
-* Add "export PYTHONPATH=$PYTHONPATH:~/git/models/research:~/git/models/research/slim:~/git/models/research/object_detection" to the end of the file.
+* Add the following to the end of the file.
+```
+export PYTHONPATH=$PYTHONPATH:~/git/models/research:~/git/models/research/slim:~/git/models/research/object_detection
+```
 * Exit nano saving the file.
 - [ ] Close and reopen the terminal then run the following:
 ```
