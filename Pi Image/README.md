@@ -136,6 +136,8 @@ $ sudo apt install chromium-browser
 - [ ] I don't want the screen saver or power managment to kick in so from the menu "Preferences->Power Manager" select
 * System tab - When inactive for -> never
 * Display tab - Blank after -> never
+* Display tab - Put to sleep after - > never
+* Display tab - switch off after -> never
 * Security tab - Automatically lock the session : Never
 - [ ] You may want to change the user password.
 - [ ] I like to set the following panel applets to my choice. Right click on bar and select "Add/Remove Panel Items" and select:
