@@ -1,0 +1,11 @@
+* https://github.com/phopley/face_recognition/archive/V0.1.2.zip
+* https://github.com/phopley/face_recognition_msgs/archive/V0.1.1.zip
+* https://github.com/phopley/head_control/archive/V1.0.0.zip
+* https://github.com/phopley/joystick/archive/V0.1.0.zip
+* https://github.com/phopley/pan_tilt/archive/V0.1.5.zip
+* https://github.com/phopley/rodney/archive/V0.1.2.zip
+* https://github.com/phopley/rodney_missions/archive/V0.2.0.zip
+* https://github.com/lrse/ros-keyboard/archive/0.1.1.zip
+* https://github.com/phopley/servo_msgs/archive/V0.1.2.zip
+* https://github.com/phopley/speech/archive/V0.1.1.zip
+* https://github.com/phopley/tf_object_detection/archive/V0.1.0.zip
