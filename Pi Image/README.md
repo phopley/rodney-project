@@ -6,13 +6,13 @@ In the guide we will
 * [Obtain and copy the Ubiquity Robotics Pi image](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#1-obtain-and-copy-the-ubiquity-robotics-pi-image)
 * [Configure and update the image](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#2-configure-and-update-the-image)
 * [Install TensorFlow](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#3-install-tensorflow)
-* [Bluetooth](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#4-bluetooth)
-* [System Configuration](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#5-system-configuration)
-* [Homer Robot Face](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#5-homer-robot-face)
-* [Voice Applications](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#6-voice-applications)
-* [ROS pakages used by Rodney](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#7-ros-pakages-used-by-rodney)
-* [Swapfile](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#8-swapfile)
-* [simple-pid](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#9-simple-pid)
+* [Setup Bluetooth](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#4-setup-bluetooth)
+* [Configure the System](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#5-configure-the-system)
+* [Instal Homer Robot Face](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#5-install-homer-robot-face)
+* [Install Voice Applications](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#6-install-voice-applications)
+* [Install ROS pakages used by Rodney](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#7-install-ros-pakages-used-by-rodney)
+* [Setup a Swapfile](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#8-setup-a-swapfile)
+* [Install simple-pid](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#9-install-simple-pid)
 
 ## Steps
 ### 1. Obtain and copy the Ubiquity Robotics Pi image
@@ -116,7 +116,7 @@ $ cd ~/git/models/research/object_detection
 $ wget http://download.tensorflow.org/models/object_detection/ssdlite_mobilenet_v2_coco_2018_05_09.tar.gz
 $ tar -xzvf ssdlite_mobilenet_v2_coco_2018_05_09.tar.gz
 ```
-### 4. Bluetooth
+### 4. Setup Bluetooth
 I sometime like to use a small Bluetooth keyboard with the robot but Bluetooth is not enabled correctly in this image.
 - [ ] Run the following commands to fix this:
 ```
@@ -127,7 +127,7 @@ $ sudo nano /boot/config.txt
 core_freq=250
 ```
 * Exit nano saving the file.
-### 5. System Configuration
+### 5. Configure the System
 The following configures the lbunutu desktop and system for how I like it for a robot.
 - [ ] So that you only have to touch 'login' on the screen and not enter a password to login select from the menu "System Tools -> Users and Groups", change to Password "Not asked on login"
 - [ ] Although the image includes Firefox I like to install Chromium with:
@@ -148,7 +148,7 @@ $ sudo apt install chromium-browser
 * System Tray
 * Indicator applets
 * Digital Clock
-### 5. Homer Robot Face
+### 5. Install Homer Robot Face
 The Homer Robot Face ROS package is used to display an animated robot face.
 - [ ] Install the homer_robot_face package
 ```
@@ -187,7 +187,7 @@ $ nano .config/openbox/lubuntu-rc.xml
 </applications>
 </openbox_config>
 ```
-### 6. Voice Applications
+### 6. Install Voice Applications
 The applications `pico2wav` and `Sox` are used by Rodney.
 - [ ]  Install pico2wav with the following command:
 ```
@@ -197,7 +197,7 @@ $ sudo apt-get install libttspico-utils
 ```
 sudo apt-get install sox libsox-fmt-all
 ```
-### 7. ROS pakages used by Rodney
+### 7. Install ROS pakages used by Rodney
 The following packages ROS packages are also used by Rodney and can be download and installed/compiled.
 - [ ] I usually use the directory ~/rondey_ws for the ROS wokspace, add it to the bash file with the following
 ```
@@ -220,7 +220,7 @@ $ rosdep update
 $ rosdep install --from-paths src --ignore-src --rosdistro kinetic -y
 $ catkin_make
 ```
-### 8. Swapfile
+### 8. Setup a Swapfile
 As the project develops and increases in size a swapfile is required when building the project. Create a 1GB swapfile with the following command:
 ```
 $ cd /
@@ -230,7 +230,7 @@ $ sudo swapon swapfile
 $ sudo nano etc/fstab
 ```
 * Add "/swapfile none swap sw 0 0" to the end of the file , save and exit
-### 9. simple-pid
+### 9. Install simple-pid
 The thunderborg node uses the simple-pid https://pypi.org/project/simple-pid/
 This can be installed with
 ```
