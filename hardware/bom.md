@@ -12,11 +12,14 @@
 | Black Cable Tie 100 x 2.5 pk100                    |     |  £0.79      |
 | [Raspberry Pi 3, Model B, 1GB RAM](https://thepihut.com/collections/raspberry-pi/products/raspberry-pi-3-model-b)| x1  |  £32.00|
 
-| Raspberry Pi Heatsink - Black                      | x1  | £1          | https://thepihut.com/                                 |
-| Miniature 5V Cooling Fan for Pi                    | x1  | £3.50       | https://thepihut.com/ |
-| Raspberry Pi Camera Modulle V2                     | x1  |             |                       |
-| Raspberry Pi 3 7" Touchscreen Display              | x1  |             |                       |
-| 16GB Miscro SD Card                                | x1  |             |                       |
+| [Raspberry Pi Heatsink - Black](https://thepihut.com/products/raspberry-pi-heatsink)| x1  | £1 |
+
+| [Miniature 5V Cooling Fan for Pi](https://thepihut.com/products/adafruit-miniature-5v-cooling-fan-for-raspberry-pi-and-other-computers)| x1  | £3.50 |
+| [Raspberry Pi Camera Modulle V2](https://thepihut.com/products/raspberry-pi-camera-module)| x1  | £24.00 |
+
+| [Raspberry Pi 3 7" Touchscreen Display](https://thepihut.com/products/official-raspberry-pi-7-touchscreen-display)| x1  | £60.00 | 
+| 16GB Miscro SD Card                                | x1  |             |
+
 | Arduino Nano                                       | x1  |             |                       |
 | Pi/Nano USB Cable                                  | x1  |             |                       |
 | Load Bearing Servo block (Futaba)                  | x1  | £25.39      | www.robotshop.com/uk/ |
