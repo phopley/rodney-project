@@ -19,6 +19,8 @@
 | [Brass Motor Shaft Hub - 6mm](https://www.modmypi.com/motors-mounts-and-wheels-1140/hub-6mm)                        | x2  | £3.98 |
 | [Load Bearing Servo block (Futaba)](https://www.robotshop.com/uk/load-bearing-servo-block-futaba.html)| x1  | £26.78      |
 | [Metal DC Geared Motor w/Encoder - 12V 122RPM 38Kg.cm](https://thepihut.com/products/metal-dc-geared-motor-w-encoder-12v-122rpm-38kg-cm)| x2  | £62 |
+| Micro USB Breakout Board | x2 |  |
+| Micro USB Power Cables   | x2 |  |
 | [Mini Bluetooth Keyboard](https://www.amazon.co.uk/Remaxm-Rechargeable-Bluetooth-Keyboards-Raspberry/dp/B07M7VQVDJ/) | x1 | £7.51 |
 | [Miniature 5V Cooling Fan for Pi](https://thepihut.com/products/adafruit-miniature-5v-cooling-fan-for-raspberry-pi-and-other-computers)| x1  | £3.50 |
 | Pi/Nano USB Cable                                  | x1  |             |
@@ -33,6 +35,7 @@
 | [Single Row 40 Pin 2.54 mm Male Pin Header Connector](https://www.amazon.co.uk/Pack-Single-2-54-Header-Connector/dp/B06XR8CV8P) | Pack 50 | £5.85 |
 | Table Tennis Balls | x2|  |
 | [Thunderborg - Dual 5A Motor Controller with DC/DC & RGB LED](https://www.modmypi.com/motor-control-1135/thunderborg)| x1  | £37.00 |
+| USB Power Bank, 2 port (2.1A, 1.0A) | x1   |     |
 | Velcro Straps       |   |   | 
 | Veroboard - various |   |   |
 | [Wheel Pair in Black (105x50mm)](https://www.modmypi.com/motors-mounts-and-wheels-1140/wheel-pair-in-black-105mm-x-50mm-) | x1 | £11.99|
@@ -41,3 +44,6 @@
 [ModMyPi](https://www.modmypi.com/)  
 [Servo Shop](https://www.servoshop.co.uk/index.php)  
 [Robot Shop](https://www.robotshop.com/uk/)  
+[RS Components](https://uk.rs-online.com/web/)  
+[Amazon](https://www.amazon.co.uk)  
+
