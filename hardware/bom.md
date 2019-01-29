@@ -1,9 +1,13 @@
 # BOM
 | Item                                               | No. | Approx Cost |
 | -------------------------------------------------- | ----| ----------- |
+| [3D Print Caster](https://github.com/phopley/rodney-project/blob/master/hardware/3D%20Prints/pingpongwheelBeefy.stl)   | x2 |  |
+| [3D Print Caster Spacer](https://github.com/phopley/rodney-project/blob/master/hardware/3D%20Prints/casterspacer2.stl) | x2 |  |
 | 16GB Miscro SD Card                                | x1  |  £8.00      |
+| [2 Pole 5mm Pitch PCB Mount Screw Terminal Block](https://www.amazon.co.uk/20Pcs-Pitch-Mount-Screw-Terminal-Green/dp/B00I00OHHY)| Pack 20  | £1.45 |
 | [68uf 6.3Vdc Electrolytic capacitor](https://uk.rs-online.com/web/p/aluminium-capacitors/7152350) | x1 | £0.15  |
 | 8 Ohm Speaker                                      | x1  |             |
+| AA Rechargeable Batteries                          | x10 |             |
 | [Adafruit Mono 2.5W Class D Audio Amplifier PAM8302](https://thepihut.com/products/adafruit-mono-2-5w-class-d-audio-amplifier-pam8302) | x1  | £4          |
 | [Advanced Motor Bracket Mount (large)](https://www.modmypi.com/motors-mounts-and-wheels-1140/advanced-motor-bracket-mount-large)               | x2  | £7.98       |
 | [Arduino Nano](https://uk.rs-online.com/web/p/products/6961667) | x1  |  £19.26 |
@@ -25,7 +29,10 @@
 | [RC Servo Futaba S3305 Heavy Duty Metal Gear](https://www.servoshop.co.uk/index.php?pid=FUTS3305&area=Servo) | x1 | £36.99 |
 | Screw button head hex M2.5 x 16mm (fan bracket to Pi)    | x2    |             |
 | [Servo Motor SG92R Micro](https://www.modmypi.com/motors-mounts-and-wheels-1140/servo-motor-sg92r-micro)| x1  | £4.01       |
+| Table Tennis Balls | x2|  |
 | [Thunderborg - Dual 5A Motor Controller with DC/DC & RGB LED](https://www.modmypi.com/motor-control-1135/thunderborg)| x1  | £37.00 |
+| Velcro Straps       |   |   | 
+| Veroboard - various |   |   |
 | [Wheel Pair in Black (105x50mm)](https://www.modmypi.com/motors-mounts-and-wheels-1140/wheel-pair-in-black-105mm-x-50mm-) | x1 | £11.99|
 
 [The Pi Hut](https://thepihut.com/)  
