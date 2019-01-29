@@ -8,7 +8,7 @@ In the guide we will
 * [Install TensorFlow](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#3-install-tensorflow)
 * [Setup Bluetooth](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#4-setup-bluetooth)
 * [Configure the System](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#5-configure-the-system)
-* [Instal Homer Robot Face](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#5-install-homer-robot-face)
+* [Install Homer Robot Face](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#5-install-homer-robot-face)
 * [Install Voice Applications](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#6-install-voice-applications)
 * [Install ROS pakages used by Rodney](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#7-install-ros-pakages-used-by-rodney)
 * [Setup a Swapfile](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#8-setup-a-swapfile)
