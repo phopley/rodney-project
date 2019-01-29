@@ -1,8 +1,10 @@
 # BOM
-| Item                                               | No. | Approx Cost | Shop                  |
-| -------------------------------------------------- | ----| ----------- | --------------------- |
-| Raspberry Pi 3, Model B, 1GB RAM                   | x1  |             |                       |
-| Raspberry Pi Heatsink - Black                      | x1  | £1          | https://thepihut.com/ |
+| Item                                               | No. | Approx Cost | Shop                                                  |
+| -------------------------------------------------- | ----| ----------- | ---------------------                                 |
+| Base - plywood board 340x180x8 mm                  | x1  |             |                                                       |
+| Brass Motor Shaft Hub - 6mm                        | x2  | £3.98       | www.modmypi.com/motors-mounts-and-wheels-1140/hub-6mm |
+| Raspberry Pi 3, Model B, 1GB RAM                   | x1  |             |                                                       |
+| Raspberry Pi Heatsink - Black                      | x1  | £1          | https://thepihut.com/                                 |
 | Miniature 5V Cooling Fan for Pi                    | x1  | £3.50       | https://thepihut.com/ |
 | Raspberry Pi Camera Modulle V2                     | x1  |             |                       |
 | Raspberry Pi 3 7" Touchscreen Display              | x1  |             |                       |
