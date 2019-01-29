@@ -12,6 +12,7 @@ In the guide we will
 * [Voice Applications](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#6-voice-applications)
 * [ROS pakages used by Rodney](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#7-ros-pakages-used-by-rodney)
 * [Swapfile](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#8-swapfile)
+* [simple-pid](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#9-simple-pid)
 
 ## Steps
 ### 1. Obtain and copy the Ubiquity Robotics Pi image
@@ -229,3 +230,9 @@ $ sudo swapon swapfile
 $ sudo nano etc/fstab
 ```
 * Add "/swapfile none swap sw 0 0" to the end of the file , save and exit
+### 9. simple-pid
+The thunderborg node uses the simple-pid https://pypi.org/project/simple-pid/
+This can be installed with
+```
+$ pip install simple-pid
+```
