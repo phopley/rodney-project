@@ -13,7 +13,7 @@
 | [Raspberry Pi 3, Model B, 1GB RAM](https://thepihut.com/collections/raspberry-pi/products/raspberry-pi-3-model-b)| x1  |  £32.00|
 | [Raspberry Pi Heatsink - Black](https://thepihut.com/products/raspberry-pi-heatsink)| x1  | £1 |
 | [Miniature 5V Cooling Fan for Pi](https://thepihut.com/products/adafruit-miniature-5v-cooling-fan-for-raspberry-pi-and-other-computers)| x1  | £3.50 |
-| [Raspberry Pi Camera Modulle V2](https://thepihut.com/products/raspberry-pi-camera-module)| x1  | £24.00 |
+| [Raspberry Pi Camera Board V2](https://www.modmypi.com/pis-and-peripherals-1139/raspberry-pi-camera-board-v2-8mp1080p)| x1  | £24.50 |
 | [Raspberry Pi 3 7" Touchscreen Display](https://thepihut.com/products/official-raspberry-pi-7-touchscreen-display)| x1  | £60.00 | 
 | 16GB Miscro SD Card                                | x1  |             |
 | Arduino Nano                                       | x1  |             |
@@ -26,3 +26,9 @@
 | Audio lead                                         | x1  |             |
 | Screw button head hex M2.5 x 16mm (fan bracket to Pi)    | x2    |             | 
 | [Servo Motor SG92R Micro](https://www.modmypi.com/motors-mounts-and-wheels-1140/servo-motor-sg92r-micro)| x1  | £4.01       |
+| 68uf 6.3V capacitor | x1 |   |
+
+[The Pi Hut](https://thepihut.com/)
+[ModMyPi](https://www.modmypi.com/)
+[Servo Shop](https://www.servoshop.co.uk/index.php)
+[Robot Shop](https://www.robotshop.com/uk/)
