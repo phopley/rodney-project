@@ -16,13 +16,13 @@
 | [Raspberry Pi Camera Modulle V2](https://thepihut.com/products/raspberry-pi-camera-module)| x1  | £24.00 |
 | [Raspberry Pi 3 7" Touchscreen Display](https://thepihut.com/products/official-raspberry-pi-7-touchscreen-display)| x1  | £60.00 | 
 | 16GB Miscro SD Card                                | x1  |             |
-
-| Arduino Nano                                       | x1  |             |                       |
-| Pi/Nano USB Cable                                  | x1  |             |                       |
-| Load Bearing Servo block (Futaba)                  | x1  | £25.39      | www.robotshop.com/uk/ |
-| RC Servo Futaba S3003                              | x2  |             |                       |
-| Adafruit Mono 2.5W Class D Audio Amplifier PAM8302 | x1  | £4          | https://thepihut.com/ |
-| 8 Ohm Speaker                                      | x1  |             |                       |
-| Audio lead                                         | x1  |             |                       |
-
-| Screw button head hex M2.5 x 16mm (fan bracket)    |     |             |                       |
+| Arduino Nano                                       | x1  |             |
+| Pi/Nano USB Cable                                  | x1  |             |
+| [Load Bearing Servo block (Futaba)](https://www.robotshop.com/uk/load-bearing-servo-block-futaba.html)| x1  | £26.78      | 
+| [RC Servo Futaba S3003](https://www.modmypi.com/raspberry-pi/robotics-and-motor-controllers-392/motors-1022/servo-motor-futaba-s3003-multi-purpose-standard-size) | x1  | £7.00 |
+| [RC Servo Futaba S3305 Heavy Duty Metal Gear](https://www.servoshop.co.uk/index.php?pid=FUTS3305&area=Servo) | x1 | £36.99 |
+| [Adafruit Mono 2.5W Class D Audio Amplifier PAM8302](https://thepihut.com/products/adafruit-mono-2-5w-class-d-audio-amplifier-pam8302) | x1  | £4          |
+| 8 Ohm Speaker                                      | x1  |             |
+| Audio lead                                         | x1  |             |
+| Screw button head hex M2.5 x 16mm (fan bracket to Pi)    | x2    |             | 
+| [Servo Motor SG92R Micro](https://www.modmypi.com/motors-mounts-and-wheels-1140/servo-motor-sg92r-micro)| x1  | £4.01       |
