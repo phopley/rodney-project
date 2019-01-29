@@ -1,8 +1,14 @@
 # Rodney Robot BOM
 | Item                                               | No. | Approx Cost |
 | -------------------------------------------------- | ----| ----------- |
+| [3D Print Camera bracket](https://github.com/phopley/rodney-project/blob/master/hardware/3D%20Prints/camera%20bracketV2.stl) | x1 | |
 | [3D Print Caster](https://github.com/phopley/rodney-project/blob/master/hardware/3D%20Prints/pingpongwheelBeefy.stl)   | x2 |  |
 | [3D Print Caster Spacer](https://github.com/phopley/rodney-project/blob/master/hardware/3D%20Prints/casterspacer2.stl) | x2 |  |
+| [3D Print Display Bracket](https://github.com/phopley/rodney-project/blob/master/hardware/3D%20Prints/display%20bracket_vb.stl) |x1| |
+| [3D Print Fan Bracket](https://github.com/phopley/rodney-project/blob/master/hardware/3D%20Prints/fan_bracket.stl) | x1 | |
+| [3D Print Head Fixing Bracket](https://github.com/phopley/rodney-project/blob/master/hardware/3D%20Prints/head%20fixing.stl) | x1 |  |
+| [3D Print Head Pan Bracket](https://github.com/phopley/rodney-project/blob/master/hardware/3D%20Prints/pan%20bracket_vb.stl) | x1 |  |
+| [3D Print Head Tilt Arm](https://github.com/phopley/rodney-project/blob/master/hardware/3D%20Prints/tilt%20arm_vb.stl) | x1 |   | 
 | [3D Print Rear Platform](https://github.com/phopley/rodney-project/blob/master/hardware/3D%20Prints/smallRearPlatform.stl) | x1 |  |
 | [3D Print Rear Platform Standoff](https://github.com/phopley/rodney-project/blob/master/hardware/3D%20Prints/platformStandoffs23.stl) | x4 |  |
 | [3D Print Speaker Bracket](https://github.com/phopley/rodney-project/blob/master/hardware/3D%20Prints/speaker_bracket.stl) | x1 |   |
@@ -10,6 +16,7 @@
 | 16GB Miscro SD Card                                | x1  |  £8.00      |
 | [2 Pole 5mm Pitch PCB Mount Screw Terminal Block](https://www.amazon.co.uk/20Pcs-Pitch-Mount-Screw-Terminal-Green/dp/B00I00OHHY)| Pack 20  | £1.45 |
 | 21.5mm PVC Pipe (used for neck) |   | £1.89 for 2 metres  |
+| 6-32 UNC x 5/16 inch Pan Head Screws (Head Fixing Bracket to Load Bearing Servo block | x8 |   |
 | [68uf 6.3Vdc Electrolytic capacitor](https://uk.rs-online.com/web/p/aluminium-capacitors/7152350) | x1 | £0.15  |
 | 8 Ohm Speaker                                      | x1  |             |
 | AA Rechargeable Batteries                          | x10 |             |
@@ -43,6 +50,7 @@
 | Table Tennis Balls | x2|  |
 | [Thunderborg - Dual 5A Motor Controller with DC/DC & RGB LED](https://www.modmypi.com/motor-control-1135/thunderborg)| x1  | £37.00 |
 | USB Power Bank, 2 port (2.1A, 1.0A) | x1   |     |
+| Various general screws/nuts/standoffs |  |  |
 | Velcro Straps       |   |   | 
 | Veroboard - various |   |   |
 | [Wheel Pair in Black (105x50mm)](https://www.modmypi.com/motors-mounts-and-wheels-1140/wheel-pair-in-black-105mm-x-50mm-) | x1 | £11.99|
