@@ -1,8 +1,9 @@
-# BOM
+# Rodney Robot BOM
 | Item                                               | No. | Approx Cost |
 | -------------------------------------------------- | ----| ----------- |
 | [3D Print Caster](https://github.com/phopley/rodney-project/blob/master/hardware/3D%20Prints/pingpongwheelBeefy.stl)   | x2 |  |
 | [3D Print Caster Spacer](https://github.com/phopley/rodney-project/blob/master/hardware/3D%20Prints/casterspacer2.stl) | x2 |  |
+| [3D Print Switch Bracket](https://github.com/phopley/rodney-project/blob/master/hardware/3D%20Prints/switchBracket.stl)| x1 |  |
 | 16GB Miscro SD Card                                | x1  |  £8.00      |
 | [2 Pole 5mm Pitch PCB Mount Screw Terminal Block](https://www.amazon.co.uk/20Pcs-Pitch-Mount-Screw-Terminal-Green/dp/B00I00OHHY)| Pack 20  | £1.45 |
 | [68uf 6.3Vdc Electrolytic capacitor](https://uk.rs-online.com/web/p/aluminium-capacitors/7152350) | x1 | £0.15  |
@@ -33,6 +34,8 @@
 | Screw button head hex M2.5 x 16mm (fan bracket to Pi)    | x2    |             |
 | [Servo Motor SG92R Micro](https://www.modmypi.com/motors-mounts-and-wheels-1140/servo-motor-sg92r-micro)| x1  | £4.01       |
 | [Single Row 40 Pin 2.54 mm Male Pin Header Connector](https://www.amazon.co.uk/Pack-Single-2-54-Header-Connector/dp/B06XR8CV8P) | Pack 50 | £5.85 |
+| Switch - Rocker single pole | x1 |   |
+| Switch - Toggle double pole | x1 |   |
 | Table Tennis Balls | x2|  |
 | [Thunderborg - Dual 5A Motor Controller with DC/DC & RGB LED](https://www.modmypi.com/motor-control-1135/thunderborg)| x1  | £37.00 |
 | USB Power Bank, 2 port (2.1A, 1.0A) | x1   |     |
