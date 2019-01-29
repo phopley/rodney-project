@@ -15,10 +15,11 @@
 | Audio lead                                         | x1  |             |
 | Base - plywood board 340x180x8 mm                  | x1  |             |
 | [Battery Holder (10 x AA)](https://www.modmypi.com/raspberry-pi/robotics-and-motor-controllers-392/battery-snaps-and-boxes-1165/10aa-holder) | x1 | £3.00 |
-| Black Cable Ties 2.5mm                             | pk100 |  £0.79      |
+| Black Cable Ties 2.5mm                             | Pack 100 |  £0.79      |
 | [Brass Motor Shaft Hub - 6mm](https://www.modmypi.com/motors-mounts-and-wheels-1140/hub-6mm)                        | x2  | £3.98 |
 | [Load Bearing Servo block (Futaba)](https://www.robotshop.com/uk/load-bearing-servo-block-futaba.html)| x1  | £26.78      |
 | [Metal DC Geared Motor w/Encoder - 12V 122RPM 38Kg.cm](https://thepihut.com/products/metal-dc-geared-motor-w-encoder-12v-122rpm-38kg-cm)| x2  | £62 |
+| [Mini Bluetooth Keyboard](https://www.amazon.co.uk/Remaxm-Rechargeable-Bluetooth-Keyboards-Raspberry/dp/B07M7VQVDJ/) | x1 | £7.51 |
 | [Miniature 5V Cooling Fan for Pi](https://thepihut.com/products/adafruit-miniature-5v-cooling-fan-for-raspberry-pi-and-other-computers)| x1  | £3.50 |
 | Pi/Nano USB Cable                                  | x1  |             |
 | [Raspberry Pi 3 7" Touchscreen Display](https://thepihut.com/products/official-raspberry-pi-7-touchscreen-display)| x1  | £60.00 |
@@ -29,6 +30,7 @@
 | [RC Servo Futaba S3305 Heavy Duty Metal Gear](https://www.servoshop.co.uk/index.php?pid=FUTS3305&area=Servo) | x1 | £36.99 |
 | Screw button head hex M2.5 x 16mm (fan bracket to Pi)    | x2    |             |
 | [Servo Motor SG92R Micro](https://www.modmypi.com/motors-mounts-and-wheels-1140/servo-motor-sg92r-micro)| x1  | £4.01       |
+| [Single Row 40 Pin 2.54 mm Male Pin Header Connector](https://www.amazon.co.uk/Pack-Single-2-54-Header-Connector/dp/B06XR8CV8P) | Pack 50 | £5.85 |
 | Table Tennis Balls | x2|  |
 | [Thunderborg - Dual 5A Motor Controller with DC/DC & RGB LED](https://www.modmypi.com/motor-control-1135/thunderborg)| x1  | £37.00 |
 | Velcro Straps       |   |   | 
