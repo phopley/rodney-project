@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component version="1.0" xmlns="http://schemas.circuit-diagram.org/circuitDiagramDocument/2012/component/xml">
+  <declaration>
+    <meta name="name" value="Motor w/ Encoder" />
+    <meta name="minsize" value="150" />
+    <meta name="author" value="phopley" />
+    <meta name="additionalinformation" value="[details here]" />
+    <meta name="guid" value="94ceb3cf-53ad-459c-9054-cd9cdfa643d0" />
+    
+    <!-- Can only be displayed horizontally -->
+    <flags>
+      <option>horizontalonly</option>
+    </flags>
+  </declaration>
+  
+  <connections>
+    <group>
+      <connection name="m+" start="_Start-20y" end="_Middle-46x-20y" edge="Start" />
+      <connection name="m-" start="_Middle-10y" end="_Middle-50x-10y" edge="Start" />
+      <connection name="gnd" start="_Middle" end="_Middle-50x" edge="Start" />
+      <connection name="vcc" start="_Middle+10y" end="_Middle-50x+10y" edge="Start" />
+      <connection name="a" start="_Middle+20y" end="_Middle-48x+20y" edge="Start" />
+      <connection name="b" start="_Middle+30y" end="_Middle-42x+30y" edge="Start" />
+    </group>
+  </connections>
+  
+  <render>
+ 
+    <group>
+      <line start="_Start-20y" end="_Middle-46x-20y" />
+      <line start="_Start-10y" end="_Middle-50x-10y" />
+      <line start="_Starty" end="_Middle-50x" />
+      <line start="_Start+10y" end="_Middle-50x+10y" />
+      <line start="_Start+20y" end="_Middle-48x+20y" />
+      <line start="_Start+30y" end="_Middle-42x+30y" />
+    </group>
+
+    <group>
+      <ellipse x="_Middle" y="_Middle" radiusx="50" radiusy="50" />
+      <text x="_Middle+4x" y="_Middle-5y" value="Motor" align="CentreCentre" size="large" />
+      <text x="_Middle+4x" y="_Middle+5y" value="w/Encoder" align="CentreCentre" size="large" />
+      <text x="_Middle-32x" y="_Middle-20y" value="M+" align="CentreCentre" />      
+      <text x="_Middle-36x" y="_Middle-10y" value="M-" align="CentreCentre" />
+      <text x="_Middle-37x" y="_Middle" value="Gnd" align="CentreCentre" />
+      <text x="_Middle-38x" y="_Middle+10y" value="Vcc" align="CentreCentre" />
+      <text x="_Middle-26x" y="_Middle+20y" value="A Vout" align="CentreCentre" />
+      <text x="_Middle-21x" y="_Middle+30y" value="B Vout" align="CentreCentre" />
+    </group>
+    
+  </render>
+</component>

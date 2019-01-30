@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component version="1.2" xmlns="http://schemas.circuit-diagram.org/circuitDiagramDocument/2012/component/xml">
+  <declaration>
+
+    <!-- Describe the component -->
+    <meta name="name" value="Pi Display Board" />
+    <meta name="version" value="1.0" />
+    <meta name="minsize" value="120" />
+    <meta name="author" value="phopley" />
+    <meta name="additionalinformation" value="[details here]" />
+    <meta name="guid" value="d3763dca-1cab-4b8d-ade1-37542ff5fa02" />
+
+    <!-- Can only be displayed horizontally -->
+    <flags>
+      <option>horizontalonly</option>
+    </flags>
+
+  </declaration>
+  <connections>
+
+    <!-- Allow other components to connect to each of the pins -->
+    <group>
+      <connection start="_Middle+48x-80y" end="_End-80y" edge="End" />
+      <connection start="_Middle+48x-60y" end="_End-60y" edge="End" />
+      <connection start="_Middle+48x-40y" end="_End-40y" edge="End" />
+      <connection start="_Middle+48x-20y" end="_End-20y" edge="End" />
+      <connection start="_Middle+48x" end="_End" edge="End" />
+    </group>
+
+  </connections>
+  <render>
+
+    <group>
+      <!-- Draw the rectangle representing the chip -->
+      <rect x="_Middle-50" y="_Middle-90" width="100" height="105" />
+
+      <!-- Draw a line to each pin -->
+      <line start="_Middle+50x-80y" end="_End-80y" />
+      <line start="_Middle+50x-60y" end="_End-60y" />
+      <line start="_Middle+50x-40y" end="_End-40y" />
+      <line start="_Middle+50x-20y" end="_End-20y" />
+      <line start="_Middle+50x" end="_End" />
+
+
+      <!-- Draw a label at each pin -->
+      <text x="_Middle+46" y="_Middle-80" align="CentreRight" size="large" value="pin1" />
+      <text x="_Middle+46" y="_Middle-60" align="CentreRight" size="large" value="pin2" />
+      <text x="_Middle+46" y="_Middle-40" align="CentreRight" size="large" value="pin3" />
+      <text x="_Middle+46" y="_Middle-20" align="CentreRight" size="large" value="pin4" />
+      <text x="_Middle+46" y="_Middle" align="CentreRight" size="large" value="pin5" />
+
+      <text x="_Middle-10" y="_Middle-40" value="Pi Display" align="CentreCentre" size="large" />
+    </group>
+
+  </render>
+</component>
