@@ -13,6 +13,8 @@
 | [3D Print Rear Platform Standoff](https://github.com/phopley/rodney-project/blob/master/hardware/3D%20Prints/platformStandoffs23.stl) | x4 |  |
 | [3D Print Speaker Bracket](https://github.com/phopley/rodney-project/blob/master/hardware/3D%20Prints/speaker_bracket.stl) | x1 |   |
 | [3D Print Switch Bracket](https://github.com/phopley/rodney-project/blob/master/hardware/3D%20Prints/switchBracket.stl)| x1 |  |
+| [3D Print Forward Platform](https://github.com/phopley/rodney-project/blob/master/hardware/3D%20Prints/fwdPlatform.stl)| x1 |  |
+| [3D Print Forward Platform Standoff](https://github.com/phopley/rodney-project/blob/master/hardware/3D%20Prints/FwdPlatformStandoffs.stl)| x4 |  |
 | 16GB Miscro SD Card                                | x1  |  £8.00      |
 | [2 Pole 5mm Pitch PCB Mount Screw Terminal Block](https://www.amazon.co.uk/20Pcs-Pitch-Mount-Screw-Terminal-Green/dp/B00I00OHHY)| Pack 20  | £1.45 |
 | 21.5mm PVC Pipe (used for neck) |   | £1.89 for 2 metres  |
