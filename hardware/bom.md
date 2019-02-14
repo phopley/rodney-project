@@ -19,7 +19,7 @@
 | [2 Pole 5mm Pitch PCB Mount Screw Terminal Block](https://www.amazon.co.uk/20Pcs-Pitch-Mount-Screw-Terminal-Green/dp/B00I00OHHY)| Pack 20  | £1.45 |
 | 21.5mm PVC Pipe (used for neck) |   | £1.89 for 2 metres  |
 | 6-32 UNC x 5/16 inch Pan Head Screws (Head Bracket to Load Bearing Block) | x8 |   |
-| [~~68uf 6.3Vdc Electrolytic capacitor~~](https://uk.rs-online.com/web/p/aluminium-capacitors/7152350) | x1 | £0.15  |
+| [680uf 16Vdc Electrolytic capacitor](https://uk.rs-online.com/web/p/aluminium-capacitors/7083627) | x1 | £0.29  |
 | 8 Ohm Speaker                                      | x1  |             |
 | AA Rechargeable Batteries                          | x10 |             |
 | [Adafruit Mono 2.5W Class D Audio Amplifier PAM8302](https://thepihut.com/products/adafruit-mono-2-5w-class-d-audio-amplifier-pam8302) | x1  | £4          |
@@ -31,7 +31,7 @@
 | [Battery Holder (10 x AA)](https://www.modmypi.com/raspberry-pi/robotics-and-motor-controllers-392/battery-snaps-and-boxes-1165/10aa-holder) | x1 | £3.00 |
 | Black Cable Ties 2.5mm                             | Pack 100 |  £0.79      |
 | [Brass Motor Shaft Hub - 6mm](https://www.modmypi.com/motors-mounts-and-wheels-1140/hub-6mm)                        | x2  | £3.98 |
-| [~~LIDAR-Lite 3 Laser Rangefinder~~](https://www.robotshop.com/uk/lidar-lite-3-laser-rangefinder.html) | x1 | £122.83 |
+| [LIDAR-Lite 3 Laser Rangefinder](https://www.robotshop.com/uk/lidar-lite-3-laser-rangefinder.html) | x1 | £122.83 |
 | [Load Bearing Servo block (Futaba)](https://www.robotshop.com/uk/load-bearing-servo-block-futaba.html)| x1  | £26.78      |
 | [Metal DC Geared Motor w/Encoder - 12V 122RPM 38Kg.cm](https://thepihut.com/products/metal-dc-geared-motor-w-encoder-12v-122rpm-38kg-cm)| x2  | £62 |
 | Micro USB Breakout Board | x2 |  |
@@ -46,7 +46,7 @@
 | [RC Servo Futaba S3003](https://www.modmypi.com/raspberry-pi/robotics-and-motor-controllers-392/motors-1022/servo-motor-futaba-s3003-multi-purpose-standard-size) | x1  | £7.00 |
 | [RC Servo Futaba S3305 Heavy Duty Metal Gear](https://www.servoshop.co.uk/index.php?pid=FUTS3305&area=Servo) | x1 | £36.99 |
 | Screw button head hex M2.5 x 16mm (fan bracket to Pi)    | x2    |             |
-| [~~Servo Motor SG92R Micro~~](https://www.modmypi.com/motors-mounts-and-wheels-1140/servo-motor-sg92r-micro)| x1  | £4.01       |
+| [Servo Motor Hitec HS-422](https://www.servoshop.co.uk/index.php?pid=HITHS422&area=Servo)| x1  | £13.08       |
 | [Single Row 40 Pin 2.54 mm Male Pin Header Connector](https://www.amazon.co.uk/Pack-Single-2-54-Header-Connector/dp/B06XR8CV8P) | Pack 50 | £5.85 |
 | Switch - Rocker single pole | x1 |   |
 | Switch - Toggle double pole | x1 |   |
