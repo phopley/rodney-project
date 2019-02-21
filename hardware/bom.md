@@ -50,7 +50,7 @@
 | [Single Row 40 Pin 2.54 mm Male Pin Header Connector](https://www.amazon.co.uk/Pack-Single-2-54-Header-Connector/dp/B06XR8CV8P) | Pack 50 | £5.85 |
 | Switch - Rocker single pole | x1 |   |
 | Switch - Toggle double pole | x1 |   |
-| Table Tennis Balls | x2|  |
+| Table Tennis Balls | x2| £1.34  |
 | [Thunderborg - Dual 5A Motor Controller with DC/DC & RGB LED](https://www.modmypi.com/motor-control-1135/thunderborg)| x1  | £37.00 |
 | USB Power Bank, 2 port (2.1A, 1.0A) | x1   |     |
 | Various general screws/nuts/standoffs |  |  |
