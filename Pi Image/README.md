@@ -198,7 +198,7 @@ $ sudo apt-get install libttspico-utils
 sudo apt-get install sox libsox-fmt-all
 ```
 ### 7. Install ROS pakages used by Rodney
-The following packages ROS packages are also used by Rodney and can be download and installed/compiled.
+The following ROS packages are also used by Rodney and can be download and installed/compiled.
 - [ ] I usually use the directory ~/rondey_ws for the ROS wokspace, add it to the bash file with the following
 ```
 $ cd ~/
@@ -208,6 +208,10 @@ $ nano .bashrc
 - [ ] Install the rosserial package so that the Arduino or Teensy can be used
 ```
 $ sudo apt-get install ros-kinetic-rosserial
+```
+- [ ] Install the laser_filters package so that we can bound the LIDAR scan
+```
+$ sudo apt-get install ros-kinetic-laser-filters
 ```
 - [ ] Rodney use the ros-keyboard package for keyboard teleop. It requires SDL version 1.2. If you just try to install SDL you will get a later version and the package will not build. Use the following commands to download the package from https://github.com/lrse/ros-keyboard and use rosdep to ensure the correct dependencies are installed before building it with catkin_make.
 * Note - I have assumed the package was download to ~/git/ros-keyboard
