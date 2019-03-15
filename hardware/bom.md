@@ -42,6 +42,7 @@
 | [RC Servo Futaba S3003](https://www.modmypi.com/raspberry-pi/robotics-and-motor-controllers-392/motors-1022/servo-motor-futaba-s3003-multi-purpose-standard-size) | x1  | £7.00 |
 | [RC Servo Futaba S3305 Heavy Duty Metal Gear](https://www.servoshop.co.uk/index.php?pid=FUTS3305&area=Servo) | x1 | £36.99 |
 | [RPLidar A1](https://www.robotshop.com/uk/rplidar-a1m8-360-degree-laser-scanner-development-kit.html) | x1 | £93.54 |
+| RPLidar USB Cable | | |
 | Screw button head hex M2.5 x 16mm (fan bracket to Pi)    | x2    |             |
 | [Servo Motor Hitec HS-422](https://www.servoshop.co.uk/index.php?pid=HITHS422&area=Servo)| x1  | £13.08       |
 | [Single Row 40 Pin 2.54 mm Male Pin Header Connector](https://www.amazon.co.uk/Pack-Single-2-54-Header-Connector/dp/B06XR8CV8P) | Pack 50 | £5.85 |
