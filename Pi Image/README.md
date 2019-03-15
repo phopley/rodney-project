@@ -8,11 +8,11 @@ In the guide we will
 * [Install TensorFlow](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#3-install-tensorflow)
 * [Setup Bluetooth](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#4-setup-bluetooth)
 * [Configure the System](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#5-configure-the-system)
-* [Install Homer Robot Face](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#5-install-homer-robot-face)
-* [Install Voice Applications](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#6-install-voice-applications)
-* [Install ROS pakages used by Rodney](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#7-install-ros-pakages-used-by-rodney)
-* [Setup a Swapfile](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#8-setup-a-swapfile)
-* [Install simple-pid](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#9-install-simple-pid)
+* [Install Homer Robot Face](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#6-install-homer-robot-face)
+* [Install Voice Applications](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#7-install-voice-applications)
+* [Install ROS pakages used by Rodney](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#8-install-ros-pakages-used-by-rodney)
+* [Setup a Swapfile](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#9-setup-a-swapfile)
+* [Install simple-pid](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#10-install-simple-pid)
 
 ## Steps
 ### 1. Obtain and copy the Ubiquity Robotics Pi image
@@ -148,7 +148,7 @@ $ sudo apt install chromium-browser
 * System Tray
 * Indicator applets
 * Digital Clock
-### 5. Install Homer Robot Face
+### 6. Install Homer Robot Face
 The Homer Robot Face ROS package is used to display an animated robot face.
 - [ ] Install the homer_robot_face package
 ```
@@ -187,7 +187,7 @@ $ nano .config/openbox/lubuntu-rc.xml
 </applications>
 </openbox_config>
 ```
-### 6. Install Voice Applications
+### 7. Install Voice Applications
 The applications `pico2wav` and `Sox` are used by Rodney.
 - [ ]  Install pico2wav with the following command:
 ```
@@ -197,7 +197,7 @@ $ sudo apt-get install libttspico-utils
 ```
 sudo apt-get install sox libsox-fmt-all
 ```
-### 7. Install ROS pakages used by Rodney
+### 8. Install ROS pakages used by Rodney
 The following ROS packages are also used by Rodney and can be download and installed/compiled.
 - [ ] I usually use the directory ~/rondey_ws for the ROS wokspace, add it to the bash file with the following
 ```
@@ -232,7 +232,7 @@ $ rosdep update
 $ rosdep install --from-paths src --ignore-src --rosdistro kinetic -y
 $ catkin_make
 ```
-### 8. Setup a Swapfile
+### 9. Setup a Swapfile
 As the project develops and increases in size a swapfile is required when building the project. Create a 1GB swapfile with the following command:
 ```
 $ cd /
@@ -242,7 +242,7 @@ $ sudo swapon swapfile
 $ sudo nano etc/fstab
 ```
 * Add "/swapfile none swap sw 0 0" to the end of the file , save and exit
-### 9. Install simple-pid
+### 10. Install simple-pid
 The thunderborg node uses the simple-pid https://pypi.org/project/simple-pid/
 This can be installed with
 ```
