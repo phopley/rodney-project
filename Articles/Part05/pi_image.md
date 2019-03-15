@@ -3,15 +3,15 @@
 These steps will guide you through the process of installing and setting up the Rapberry Pi image for the Rodney project. We will use a free lbuntu image from Ubiquity Robotics. This image included ROS Kinetic and there own ROS packages like raspicam_node.
 
 In the guide we will
-* [Obtain and copy the Ubiquity Robotics Pi image](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#1-obtain-and-copy-the-ubiquity-robotics-pi-image)
-* [Configure and update the image](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#2-configure-and-update-the-image)
-* [Setup Bluetooth](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#4-setup-bluetooth)
-* [Configure the System](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#5-configure-the-system)
-* [Install Homer Robot Face](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#5-install-homer-robot-face)
-* [Install Voice Applications](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#6-install-voice-applications)
-* [Install ROS pakages used by Rodney](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#7-install-ros-pakages-used-by-rodney)
-* [Setup a Swapfile](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#8-setup-a-swapfile)
-* [Install simple-pid](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#9-install-simple-pid)
+* [Obtain and copy the Ubiquity Robotics Pi image](https://github.com/phopley/rodney-project/blob/master/Articles/Part05/pi_image.md#1-obtain-and-copy-the-ubiquity-robotics-pi-image)
+* [Configure and update the image](https://github.com/phopley/rodney-project/blob/master/Articles/Part05/pi_image.md#2-configure-and-update-the-image)
+* [Setup Bluetooth](https://github.com/phopley/rodney-project/blob/master/Articles/Part05/pi_image.md#3-setup-bluetooth)
+* [Configure the System](https://github.com/phopley/rodney-project/blob/master/Articles/Part05/pi_image.md#4-configure-the-system)
+* [Install Homer Robot Face](https://github.com/phopley/rodney-project/blob/master/Articles/Part05/pi_image.md#5-install-homer-robot-face)
+* [Install Voice Applications](https://github.com/phopley/rodney-project/blob/master/Articles/Part05/pi_image.md#6-install-voice-applications)
+* [Install ROS pakages used by Rodney](https://github.com/phopley/rodney-project/blob/master/Articles/Part05/pi_image.md#7-install-ros-pakages-used-by-rodney)
+* [Setup a Swapfile](https://github.com/phopley/rodney-project/blob/master/Articles/Part05/pi_image.md#8-setup-a-swapfile)
+* [Install simple-pid](https://github.com/phopley/rodney-project/blob/master/Articles/Part05/pi_image.md#9-install-simple-pid)
 
 ## Steps
 ### 1. Obtain and copy the Ubiquity Robotics Pi image
@@ -35,9 +35,7 @@ $ sudo apt-get upgrade
 $ sudo apt-get dist-upgrade
 $ sudo reboot now
 ```
-### 3. N/A
-
-### 4. Setup Bluetooth
+### 3. Setup Bluetooth
 I sometime like to use a small Bluetooth keyboard with the robot but Bluetooth is not enabled correctly in this image.
 - [ ] Run the following commands to fix this:
 ```
@@ -48,7 +46,7 @@ $ sudo nano /boot/config.txt
 core_freq=250
 ```
 * Exit nano saving the file.
-### 5. Configure the System
+### 4. Configure the System
 The following configures the lbunutu desktop and system for how I like it for a robot.
 - [ ] So that you only have to touch 'login' on the screen and not enter a password to login select from the menu "System Tools -> Users and Groups", change to Password "Not asked on login"
 - [ ] Although the image includes Firefox I like to install Chromium with:
