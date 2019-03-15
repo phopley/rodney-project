@@ -213,6 +213,14 @@ $ sudo apt-get install ros-kinetic-rosserial
 ```
 $ sudo apt-get install ros-kinetic-laser-filters
 ```
+- [ ] Install the map_server package
+```
+$ sudo apt-get install ros-kinetic-map-server
+```
+- [ ] Install the amcl package
+```
+$ sudo apt-get install ros-kinetic-amcl
+```
 - [ ] Rodney use the ros-keyboard package for keyboard teleop. It requires SDL version 1.2. If you just try to install SDL you will get a later version and the package will not build. Use the following commands to download the package from https://github.com/lrse/ros-keyboard and use rosdep to ensure the correct dependencies are installed before building it with catkin_make.
 * Note - I have assumed the package was download to ~/git/ros-keyboard
 ```
