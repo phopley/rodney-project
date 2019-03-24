@@ -18,13 +18,13 @@ In the guide we will
 Here we will download and install the image.
 - [ ] Download the lastest ROS image from the Ubiquity Robotics web site https://downloads.ubiquityrobotics.com/pi.html. The last image I used was 2018-06-27-ubiquity-xenial-lxde-raspberry-pi.img.xz
 - [ ] Unzip the image.
-- [ ] Format a 16GB SD card. I SD Card Formatter to format the card.
+- [ ] Format a 16GB SD card. I use SD Card Formatter to format the card.
 - [ ] Copy the unzipped image to the SD card. I use Win32DiskImager to create the image on an SD card.
 - [ ] Boot the Pi from the SD card. When the Raspberry Pi boots for the first time it resizes the file system to fill the SD card. This can make the first boot take some time.
 - [ ] Login to the Pi. The user name is 'ubuntu' and the password is 'ubuntu'.
 ### 2. Configure and update the image
 - [ ] The image comes with a WiFi access point. The SSID is ubiquityrobotXXXX where XXXX is part of the MAC address, the wifi password is robotseverywhere. Since I'm developing an house robot I prefer to connect to my home Wi-Fi. Disconnect the WiFi from the access point and connect to the home WiFi network. SSH is enabled so it is possible to remotley login.
-- [ ] There is an Ubiquity Robotics script designed for there own robots. Disable the script with the following shell command.
+- [ ] There is an Ubiquity Robotics script designed for their own robots. Disable the script with the following shell command.
 ```
 $ sudo systemctl disable magni-base
 ```
@@ -73,7 +73,7 @@ The Homer Robot Face ROS package is used to display an animated robot face.
 ```
 $ sudo apt-get install ros-kinetic-homer-robot-face
 ```
-- [ ] There is a problem with a directory path. The code expects the OGRE to be in the directory `/usr/lib/x86_64-linux-gnu/OGRE-1.9.0.` but as you would expect on a Raspberry Pi it's in `/usr/lib/arm-linux-gnueabihf/OGRE-1.9.0.` We can solve this problem by creating a symbolic link
+- [ ] There is a problem with a directory path. The code expects the OGRE to be in the directory `/usr/lib/x86_64-linux-gnu/OGRE-1.9.0` but as you would expect on a Raspberry Pi it's in `/usr/lib/arm-linux-gnueabihf/OGRE-1.9.0` We can solve this problem by creating a symbolic link
 ```
 $ cd /usr/lib
 $ sudo mkdir -p x86_64-linux-gnu
@@ -84,9 +84,9 @@ $ sudo ln -s /usr/lib/arm-linux-gnueabihf/OGRE-1.9.0 /usr/lib/x86_64-linux-gnu
 sudo nano /opt/ros/kinetic/share/homer_robot_face/config/config.cfg
 ```
 * Mesh Filename : GiGo
-* Head Color : 1.0 1.0 1.0
-* Iris Color : 0.0 1.0 1.0
-* Outline Color : 0.0 0.0 0.0
+* Head Color : 1.0, 1.0, 1.0
+* Iris Color : 0.0, 1.0, 1.0
+* Outline Color : 0.0, 0.0, 0.0
 * Voice : male
 * Window Width : 400
 * Window Height : 450
