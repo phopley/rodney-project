@@ -132,14 +132,6 @@ $ sudo apt-get install ros-kinetic-rosserial
 ```
 $ sudo apt-get install ros-kinetic-laser-filters
 ```
-- [ ] Install the map_server package
-```
-$ sudo apt-get install ros-kinetic-map-server
-```
-- [ ] Install the amcl package
-```
-$ sudo apt-get install ros-kinetic-amcl
-```
 - [ ] Install the robot_localization package
 ```
 $ sudo apt-get install ros-kinetic-robot-localization
