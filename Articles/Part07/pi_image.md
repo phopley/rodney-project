@@ -38,16 +38,8 @@ $ sudo reboot now
 ```
 ### 3. N/A
 ### 4. Setup Bluetooth
-I sometime like to use a small Bluetooth keyboard with the robot but Bluetooth is not enabled correctly in this image.
-- [ ] Run the following commands to fix this:
-```
-$ sudo nano /boot/config.txt
-```
-* Add the following line between the lines "dtoverlay=pi3-miniuart-bt" and "dtoverlay=i2c-rtc,mcp7940x". 
-```
-core_freq=250
-```
-* Exit nano saving the file.
+I like to use a small Bluetooth keyboard with the robot. In this image the Bluetooth is enabled correctly.
+- [ ] Pair the device.
 ### 5. Configure the System
 The following configures the lbunutu desktop and system for how I like it for a robot.
 - [ ] So that you only have to touch 'login' on the screen and not enter a password to login select from the menu "System Tools -> Users and Groups", change to Password "Not asked on login"
