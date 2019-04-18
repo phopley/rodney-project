@@ -3,16 +3,16 @@
 These steps will guide you through the process of installing and setting up the Rapberry Pi image for the Rodney project. We will use a free lbuntu image from Ubiquity Robotics. This image included ROS Kinetic and there own ROS packages like raspicam_node.
 
 In the guide we will
-* [Obtain and copy the Ubiquity Robotics Pi image](https://github.com/phopley/rodney-project/wiki/Raspberry-Pi-image#1-obtain-and-copy-the-ubiquity-robotics-pi-image)
-* [Configure and update the image](https://github.com/phopley/rodney-project/wiki/Raspberry-Pi-image#2-configure-and-update-the-image)
+* [Obtain and copy the Ubiquity Robotics Pi image](https://github.com/phopley/rodney-project/blob/master/Articles/Part07/pi_image.md#1-obtain-and-copy-the-ubiquity-robotics-pi-image)
+* [Configure and update the image](https://github.com/phopley/rodney-project/blob/master/Articles/Part07/pi_image.md#2-configure-and-update-the-image)
 * N/A
-* [Setup Bluetooth](https://github.com/phopley/rodney-project/wiki/Raspberry-Pi-image#4-setup-bluetooth)
-* [Configure the System](https://github.com/phopley/rodney-project/wiki/Raspberry-Pi-image#5-configure-the-system)
-* [Install Homer Robot Face](https://github.com/phopley/rodney-project/wiki/Raspberry-Pi-image#6-install-homer-robot-face)
-* [Install Voice Applications](https://github.com/phopley/rodney-project/wiki/Raspberry-Pi-image#7-install-voice-applications)
-* [Install ROS pakages used by Rodney](https://github.com/phopley/rodney-project/wiki/Raspberry-Pi-image#8-install-ros-pakages-used-by-rodney)
-* [Setup a Swapfile](https://github.com/phopley/rodney-project/wiki/Raspberry-Pi-image#9-setup-a-swapfile)
-* [Install simple-pid](https://github.com/phopley/rodney-project/wiki/Raspberry-Pi-image#10-install-simple-pid)
+* [Setup Bluetooth](https://github.com/phopley/rodney-project/blob/master/Articles/Part07/pi_image.md#4-setup-bluetooth)
+* [Configure the System](https://github.com/phopley/rodney-project/blob/master/Articles/Part07/pi_image.md#5-configure-the-system)
+* [Install Homer Robot Face](https://github.com/phopley/rodney-project/blob/master/Articles/Part07/pi_image.md#6-install-homer-robot-face)
+* [Install Voice Applications](https://github.com/phopley/rodney-project/blob/master/Articles/Part07/pi_image.md#7-install-voice-applications)
+* [Install ROS pakages used by Rodney](https://github.com/phopley/rodney-project/blob/master/Articles/Part07/pi_image.md#8-install-ros-pakages-used-by-rodney)
+* [Setup a Swapfile](https://github.com/phopley/rodney-project/blob/master/Articles/Part07/pi_image.md#9-setup-a-swapfile)
+* [Install simple-pid](https://github.com/phopley/rodney-project/blob/master/Articles/Part07/pi_image.md#10-install-simple-pid)
 
 ## Steps
 ### 1. Obtain and copy the Ubiquity Robotics Pi image
