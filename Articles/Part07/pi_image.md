@@ -17,7 +17,7 @@ In the guide we will
 ## Steps
 ### 1. Obtain and copy the Ubiquity Robotics Pi image
 Here we will download and install the image.
-- [ ] Download the lastest ROS image from the Ubiquity Robotics web site https://downloads.ubiquityrobotics.com/pi.html. The last image I used was 2018-06-27-ubiquity-xenial-lxde-raspberry-pi.img.xz
+- [ ] Download the lastest ROS image from the Ubiquity Robotics web site https://downloads.ubiquityrobotics.com/pi.html. The last image I used was 2019-02-19-ubiquity-xenial-lxde-raspberry-pi.img.xz
 - [ ] Unzip the image.
 - [ ] Format a 16GB SD card. I use SD Card Formatter to format the card.
 - [ ] Copy the unzipped image to the SD card. I use Win32DiskImager to create the image on an SD card.
