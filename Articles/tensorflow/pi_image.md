@@ -3,15 +3,15 @@
 These steps will guide you through the process of installing and setting up the Rapberry Pi image for the Rodney project. We will use a free lbuntu image from Ubiquity Robotics. This image included ROS Kinetic and there own ROS packages like raspicam_node.
 
 In the guide we will
-* [Obtain and copy the Ubiquity Robotics Pi image](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#1-obtain-and-copy-the-ubiquity-robotics-pi-image)
-* [Configure and update the image](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#2-configure-and-update-the-image)
-* [Install TensorFlow](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#3-install-tensorflow)
-* [Bluetooth](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#4-bluetooth)
-* [System Configuration](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#5-system-configuration)
-* [Homer Robot Face](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#5-homer-robot-face)
-* [Voice Applications](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#6-voice-applications)
-* [ROS pakages used by Rodney](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#7-ros-pakages-used-by-rodney)
-* [Swapfile](https://github.com/phopley/rodney-project/blob/master/Pi%20Image/README.md#8-swapfile)
+* [Obtain and copy the Ubiquity Robotics Pi image](https://github.com/phopley/rodney-project/blob/master/Articles/tensorflow/pi_image.md#1-obtain-and-copy-the-ubiquity-robotics-pi-image)
+* [Configure and update the image](https://github.com/phopley/rodney-project/blob/master/Articles/tensorflow/pi_image.md#2-configure-and-update-the-image)
+* [Install TensorFlow](https://github.com/phopley/rodney-project/blob/master/Articles/tensorflow/pi_image.md#3-install-tensorflow)
+* [Bluetooth](https://github.com/phopley/rodney-project/blob/master/Articles/tensorflow/pi_image.md#4-bluetooth)
+* [System Configuration](https://github.com/phopley/rodney-project/blob/master/Articles/tensorflow/pi_image.md#5-system-configuration)
+* [Homer Robot Face](https://github.com/phopley/rodney-project/blob/master/Articles/tensorflow/pi_image.md#6-homer-robot-face)
+* [Voice Applications](https://github.com/phopley/rodney-project/blob/master/Articles/tensorflow/pi_image.md#7-voice-applications)
+* [ROS pakages used by Rodney](https://github.com/phopley/rodney-project/blob/master/Articles/tensorflow/pi_image.md#8-ros-pakages-used-by-rodney)
+* [Swapfile](https://github.com/phopley/rodney-project/blob/master/Articles/tensorflow/pi_image.md#9-swapfile)
 
 ## Steps
 ### 1. Obtain and copy the Ubiquity Robotics Pi image
@@ -147,7 +147,7 @@ $ sudo apt install chromium-browser
 * System Tray
 * Indicator applets
 * Digital Clock
-### 5. Homer Robot Face
+### 6. Homer Robot Face
 The Homer Robot Face ROS package is used to display an animated robot face.
 - [ ] Install the homer_robot_face package
 ```
@@ -186,7 +186,7 @@ $ nano .config/openbox/lubuntu-rc.xml
 </applications>
 </openbox_config>
 ```
-### 6. Voice Applications
+### 7. Voice Applications
 The applications `pico2wav` and `Sox` are used by Rodney.
 - [ ]  Install pico2wav with the following command:
 ```
@@ -196,7 +196,7 @@ $ sudo apt-get install libttspico-utils
 ```
 sudo apt-get install sox libsox-fmt-all
 ```
-### 7. ROS pakages used by Rodney
+### 8. ROS pakages used by Rodney
 The following packages ROS packages are also used by Rodney and can be download and installed/compiled.
 - [ ] I usually use the directory ~/rondey_ws for the ROS wokspace, add it to the bash file with the following
 ```
@@ -219,7 +219,7 @@ $ rosdep update
 $ rosdep install --from-paths src --ignore-src --rosdistro kinetic -y
 $ catkin_make
 ```
-### 8. Swapfile
+### 9. Swapfile
 As the project develops and increases in size a swapfile is required when building the project. Create a 1GB swapfile with the following command:
 ```
 $ cd /
